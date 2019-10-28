@@ -75,6 +75,8 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
+Heroku information [Heroku NodeJS info](https://www.heroku.com/nodejs).
+
 To learn how to setup a local MongoDB instance for testing, check out how to [Connect to MongoDB](https://docs.mongodb.com/guides/server/drivers/).
 
 To learn how to deploy a full-stack web app to heroku, check out [this great guide](https://daveceddia.com/deploy-react-express-app-heroku/).
