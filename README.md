@@ -88,3 +88,15 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
 
 TODO: REMOVE THIS LINE This line is being added to satisfy the Managing Team Github Page assignment
+
+### Creating branches
+
+We will be creating branches off of the `develop` branch and saving `master` for releases.
+Our feature branches should follow the style `feature/name-of-branch` where name-of-branch is something descriptive and short.
+A quick fix to a bug can follow the style `hotfix/name-of-fix`
+Please do not work directly on your local version of the develop or master branches. Create your own branch instead, even if there's only one line of code to commit.
+Remember to push your branches to the remote repository often (every time you work on the project). This saves us from losing code due to hardware failure and facilitates collaboration on features.
+
+### Pull requests
+
+Once work on a branch is complete, create a [pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request). Assign it to Regan (oreganoregano). Usually the base repository you'll be using is `develop`
