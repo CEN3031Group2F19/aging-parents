@@ -83,6 +83,8 @@ To learn how to deploy a full-stack web app to heroku, check out [this great gui
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
+To learn Express, go to the [Express website](https://expressjs.com/).
+
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
