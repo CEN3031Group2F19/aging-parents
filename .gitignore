@@ -54,4 +54,4 @@ yarn-error.log*
 
 # User-specific stuff
 .idea/*
-package-lock.json
+#package-lock.json
