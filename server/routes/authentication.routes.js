@@ -2,9 +2,12 @@ var express = require("express");
 var passport = require("passport");
 var Account = require("../models/account");
 var router = express.Router();
+const jwt = require("jsonwebtoken");
 
 router.get("/", function(req, res) {
-  res.render("index", { user: req.user });
+  passport.authenticate("jwt", { session: false })(req, res, function() {
+    res.json({ user: req.user });
+  });
 });
 
 router.get("/register", function(req, res) {
@@ -27,12 +30,11 @@ router.post("/register", function(req, res) {
   );
 });
 
-router.get("/login", function(req, res) {
-  res.render("login", { user: req.user });
-});
-
 router.post("/login", passport.authenticate("local"), function(req, res) {
-  res.redirect("/");
+  const { user } = req;
+  const token = jwt.sign(user._id.toString(), "secret"); //TODO change this
+
+  return res.json({ user, token });
 });
 
 router.get("/logout", function(req, res) {

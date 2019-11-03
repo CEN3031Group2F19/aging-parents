@@ -6,8 +6,15 @@ const path = require("path"),
   exampleRouter = require("../routes/examples.server.routes"),
   users = require("../routes/authentication.routes"),
   passport = require("passport"),
-  LocalStrategy = require("passport-local").Strategy;
+  LocalStrategy = require("passport-local").Strategy,
+  cors = require("cors");
 var Account = require("../models/account");
+var JwtStrategy = require("passport-jwt").Strategy,
+  ExtractJwt = require("passport-jwt").ExtractJwt;
+const jwtOpts = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: "secret" //TODO change this
+};
 
 module.exports.init = () => {
   /* 
@@ -23,6 +30,10 @@ module.exports.init = () => {
   // initialize app
   const app = express();
 
+  //Enable cross origin requests
+  //TODO whitelist only our app
+  app.use(cors());
+
   // enable request logging for development debugging
   app.use(morgan("dev"));
 
@@ -30,9 +41,26 @@ module.exports.init = () => {
   app.use(bodyParser.json());
 
   //user authentication middleware
-  app.use(passport.initialize());
-  app.use(passport.session());
   passport.use(new LocalStrategy(Account.authenticate()));
+
+  app.use(passport.initialize());
+  passport.use(
+    new JwtStrategy(jwtOpts, function(jwtPayload, done) {
+      Account.findById(jwtPayload, function(err, user) {
+        console.log(user, err);
+        if (err) {
+          return done(err, false);
+        }
+        if (user) {
+          return done(null, user);
+        } else {
+          return done(null, false);
+          // or you could create a new account
+        }
+      });
+    })
+  );
+
   passport.serializeUser(Account.serializeUser());
   passport.deserializeUser(Account.deserializeUser());
 
@@ -64,10 +92,7 @@ module.exports.init = () => {
   if (app.get("env") === "development") {
     app.use(function(err, req, res, next) {
       res.status(err.status || 500);
-      res.render("error", {
-        message: err.message,
-        error: err
-      });
+      res.json({ error: err });
     });
   }
 
@@ -75,10 +100,7 @@ module.exports.init = () => {
   // no stacktraces leaked to user
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render("error", {
-      message: err.message,
-      error: {}
-    });
+    res.json({ error: err });
   });
 
   return app;
