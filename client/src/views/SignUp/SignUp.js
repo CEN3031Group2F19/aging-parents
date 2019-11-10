@@ -1,9 +1,9 @@
 import React from "react";
 import { Form, Button } from "semantic-ui-react";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 const axios = require("axios");
 
-class Login extends React.Component {
+class SignUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,12 +13,13 @@ class Login extends React.Component {
   }
   handleSubmit = e => {
     e.preventDefault();
-    this.login();
+    this.signup();
   };
-  async login() {
+
+  async signup() {
     try {
       const serverUri = process.env.SERVER_URI || "http://localhost:5000";
-      const response = await axios.post(`${serverUri}/login`, {
+      const response = await axios.post(`${serverUri}/register`, {
         username: this.state.username,
         password: this.state.password
       });
@@ -29,9 +30,10 @@ class Login extends React.Component {
   }
   render() {
     return (
-      <div className="login">
+      <div className="signup">
         {" "}
         <div className="column">
+          <h1>Create an account</h1>
           <Form>
             {/* <Form.Group widths="equal"> */}
             <Form.Input
@@ -51,10 +53,9 @@ class Login extends React.Component {
               Submit
             </Form.Field>
           </Form>
-          <Link to="/signup">Create an account</Link>
         </div>
       </div>
     );
   }
 }
-export default Login;
+export default SignUp;
