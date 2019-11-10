@@ -18,7 +18,8 @@ class SignUp extends React.Component {
 
   async signup() {
     try {
-      const serverUri = process.env.SERVER_URI || "http://localhost:5000";
+      const serverUri =
+        process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
       const response = await axios.post(`${serverUri}/register`, {
         username: this.state.username,
         password: this.state.password
