@@ -30,6 +30,15 @@ class Header extends React.Component {
         onClick={this.handleItemClick}
       />
     ) : null;
+    const dailyTasks = signedIn ? (
+      <Menu.Item
+        as={Link}
+        to="/DailyTasks"
+        name="DailyTasks"
+        active={activeItem === "DailyTasks"}
+        onClick={this.handleItemClick}
+      />
+    ) : null;
 
     return (
       <div>
@@ -42,6 +51,7 @@ class Header extends React.Component {
             onClick={this.handleItemClick}
           />
           {menuItems}
+          {dailyTasks}
           <Menu.Menu position="right">{logInOrOut}</Menu.Menu>
         </Menu>
       </div>
