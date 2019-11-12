@@ -39,6 +39,9 @@ class App extends React.Component {
     this.setState({ token: null });
   }
 
+  // Daily tasks functionality:
+
+  // delete task
   deleteItem = key => {
     const filteredItems = this.state.items.filter(item => {
       return item.key !== key
@@ -55,6 +58,8 @@ class App extends React.Component {
       currentItem,
     })
   }
+
+  //Add task
   addItem = e => {
     e.preventDefault()
     const newItem = this.state.currentItem

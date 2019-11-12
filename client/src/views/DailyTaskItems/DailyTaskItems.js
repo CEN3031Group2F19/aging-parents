@@ -1,18 +1,23 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import Moment from 'react-moment';
 
 class DailyTaskItems extends Component {
   createTasks = item => {
+
     return (
       <li key={item.key} onClick={() => this.props.deleteItem(item.key)}>
+        
         {item.text}
+        {/* - Add timestamp */}
+
       </li>
     )
   }
   render() {
-    const todoEntries = this.props.entries
-    const listItems = todoEntries.map(this.createTasks)
+    const taskEntries = this.props.entries
+    const listItems = taskEntries.map(this.createTasks)
 
-    return <ul className="theList">{listItems}</ul>
+    return <ul>{listItems}</ul>
   }
 }
 
