@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class TodoItems extends Component {
+class DailyTaskItems extends Component {
   createTasks = item => {
     return (
       <li key={item.key} onClick={() => this.props.deleteItem(item.key)}>
@@ -16,4 +16,4 @@ class TodoItems extends Component {
   }
 }
 
-export default TodoItems
+export default DailyTaskItems

@@ -2,8 +2,8 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import Home from "./views/Home/Home";
 import Notes from "./views/Notes/Notes";
-import TodoList from "./views/DailyTasks/TodoList";
-import TodoItems from "./views/DailyTasks/TodoItems";
+import DailyTaskList from "./views/DailyTaskList/DailyTaskList";
+import DailyTaskItems from "./views/DailyTaskItems/DailyTaskItems";
 import NotFound from "./views/NotFound";
 import SignUp from "./views/SignUp/SignUp";
 import Header from "./components/Header/Header";
@@ -101,12 +101,12 @@ class App extends React.Component {
             path="/DailyTasks"
             render={props =>
               this.isUserSignedIn() ? (
-               [ <TodoList 
+               [ <DailyTaskList
                 addItem={this.addItem}
                 inputElement={this.inputElement}
                 handleInput={this.handleInput}
                 currentItem={this.state.currentItem} />,                 <
-                  TodoItems entries={this.state.items} deleteItem={this.deleteItem} /> 
+                  DailyTaskItems entries={this.state.items} deleteItem={this.deleteItem} /> 
               ]
               ) : (
                 <Redirect to="/Home" />

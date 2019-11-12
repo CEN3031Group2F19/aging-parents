@@ -3,7 +3,7 @@ import Moment from 'react-moment';
 import { Button, Header, Image, Modal } from 'semantic-ui-react'
 
 
-class TodoList extends Component {
+class DailyTaskList extends Component {
   componentDidUpdate() {
     this.props.inputElement.current.focus()
     
@@ -45,4 +45,4 @@ class TodoList extends Component {
   }
 }
 
-export default TodoList
+export default DailyTaskList
