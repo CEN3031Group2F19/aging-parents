@@ -1,68 +1,110 @@
 import React from 'react';
 import './Notes.css';
 import config from './config';
-import { Form, Button } from "semantic-ui-react";
+import { Form, Button, TextArea, Input, Dropdown } from 'semantic-ui-react';
 const axios = require("axios");
 
 /* Temporary data to be replaced with a webapi call */
+const newNote = { value: 0, text: "New Note", noteContent: ""};
 const testNotes = [ //Retrieve all notes from patient profile
-    { id: 1, title: "Random Note 1", text: "Here is some random text for Random Note 1"},
-    { id: 2, title: "Randomer Note 2", text: "Here is some more random text for Randomer Note 2"},
-    { id: 3, title: "Favorite Food", text: "Fried chicken\nRice and beans\nCereal with Almond Milk"},
+    { value: 1, text: "Random Note 1", noteContent: "Here is some random text for Random Note 1"},
+    { value: 2, text: "Randomer Note 2", noteContent: "Here is some more random text for Randomer Note 2"},
+    { value: 3, text: "Favorite Food", noteContent: "Fried chicken\nRice and beans\nCereal with Almond Milk"},
 ];
 
 class Notes extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-        notes: [],
-    };
-  }
-
-  // Append a note to this.state.notes - currently defective
-  appendNote = (noteInfo) => {
-    this.setState(prevState => ({
-      notes: [...prevState.notes, noteInfo],
-    }));
-  };
-
-  render() {
-    this.state.notes = testNotes;
-
-    return (
-        <div className="App">
-            <header className="App-header">
-                <NotesForm 
-                    onSubmit={this.appendNote}
-                    noteListItems={this.state.notes}/>
-            </header>
-        </div>
-    );
-  }
-}
-
-class NotesForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: '',
-            text: '',
+            value: newNote.value,
+            title: newNote.text,
+            text: newNote.noteContent,
+            notes: [newNote, ...testNotes],
+            updateButtonText: 'Update',
+            deleteBtnDisplay: { display:'none' }
         };
     }
 
+    // Add or update a note
+    updateNotes = (e, sender) => {
+        const vals = this.enumerateNoteValues();
+
+        // Add a new note - noteId will be a positive integer
+        if (this.state.value < 1) {
+            var noteId = 1;
+            while (vals.includes(noteId.toString())) noteId++;
+
+            var newNotesArr = this.state.notes;
+
+            var addedNote = {value: noteId, text: this.state.title, noteContent: this.state.text};
+            newNotesArr.splice(1, 0, addedNote);
+
+            this.setState({
+                notes: newNotesArr
+            });
+        }
+        // Update an existing note
+        else {            
+            var newNotesArr = this.state.notes;
+
+            for(var i = 0; i < newNotesArr.length; i++) 
+                if (newNotesArr[i].value == this.state.value) {
+                    newNotesArr[i].text = this.state.title;
+                    newNotesArr[i].noteContent = this.state.text;
+                    i = newNotesArr.length;
+                }
+
+            this.setState({
+                notes: newNotesArr
+            });
+        }
+    };
+
+    // Delete a note from state
+    deleteNote = (e, sender) => {
+        var newNotesArr = this.state.notes;
+        for (var i = 1; i < newNotesArr.length; i++)
+            if (newNotesArr[i].value == this.state.value) {
+                var index = newNotesArr.indexOf(newNotesArr[i]);
+                if (index > -1) {
+                    newNotesArr.splice(index, 1);
+                    this.setState({ notes: newNotesArr, value: newNote.value, title: newNote.text, text: newNote.noteContent });
+                }
+            }
+    };
+
+    enumerateNoteValues = () => {
+        var values = [];
+        for(var val in this.state.notes) 
+            values.push(val);
+        return values;
+    };
+
     titleTbOnChange = event => this.setState({ title: event.target.value });
     textTbOnChange = event => this.setState({ text: event.target.value });
-    selectedOnChange = event => {    
-        const index = event.target.selectedIndex;
-        var newText = '';
-        var newTitle = '';
-
-        if (index > 0) {
-            newTitle = this.props.noteListItems[index - 1].title;
-            newText = this.props.noteListItems[index - 1].text;
+    selectedOnChange = (e, sender) => {
+        if (sender.value == newNote.value) {
+            this.setState({ 
+                value: newNote.value, 
+                title: newNote.text, 
+                text: newNote.noteContent, 
+                updateButtonText: 'Add',
+                deleteBtnDisplay: { display:'none' }
+            });
         }
-
-        this.setState({ title: newTitle, text: newText });
+        else
+            for(var i = 0; i < this.state.notes.length; i++)
+                if (this.state.notes[i].value == sender.value) {
+                    const note = this.state.notes[i];
+                    this.setState({ 
+                        value: note.value, 
+                        title: note.text, 
+                        text: note.noteContent,
+                        updateButtonText: 'Update',
+                        deleteBtnDisplay: { display:'default' }});
+            
+                    i = this.state.notes.length; // Break loop
+                }
     };
 
     handleSubmit = async (event) => {
@@ -83,102 +125,37 @@ class NotesForm extends React.Component {
 
     render() {
         return (
-            <form id="NoteForm" onSubmit={this.handleSubmit}>
-                <NoteList
-                    onChange={this.selectedOnChange}
-                    listItems={this.props.noteListItems}
-                />
-                <br />
-                <NoteTitle placeholder={"Title"} text={this.state.title} onChange={this.titleTbOnChange} />
-                <br />
-                <NoteText text={this.state.text} onChange={this.textTbOnChange} />
-                <br />
-                <SaveButton text={"Save"}/>
-            </form>
-        );
-    }
-}
-
-class NoteList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        };
-    }
-
-    render() {
-        return (
-            <select id="noteSelectList" onChange={this.props.onChange}>
-                <Note title="New Note" />
-                {this.props.listItems.map(note => <Note {...note} />)}
-            </select>
-        );
-    }
-}
-
-class Note extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        };
-    }
-
-    render() {
-        return(
-            <option key={this.props.id}>{this.props.title}</option>
-        );
-    }
-}
-
-class NoteTitle extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            text: '',
-        };
-    }
-
-    render() {
-        return (
-            <input type="text" 
-                placeholder={this.props.placeholder} 
-                maxLength={config.NoteTitleMaxLength}
-                onChange={this.props.onChange}
-                value={this.props.text}
-                required />
-        );
-    }
-}
-
-class NoteText extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            text: '',
-        };
-    }
-
-    render() {
-        return(
-            <textarea maxLength={config.NoteMaxLength}
-                    value={this.props.text}
-                    onChange={this.props.onChange}/>
-        );
-    }
-}
-
-class SaveButton extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        };
-    }
-
-    render() {
-        return (
-            <button>
-                {this.props.text}
-            </button>
+            <div className="App">
+                <header className="App-header">
+                    <Form
+                        size='massive'
+                        key='massive'>
+                        <Dropdown
+                            fluid selection
+                            id='notesDropdown'
+                            placeholder='Select Note'
+                            onChange={this.selectedOnChange}
+                            options={this.state.notes}
+                            value={this.state.value}
+                        />
+                        <Input 
+                            onChange={this.titleTbOnChange}
+                            placeholder='Title' 
+                            value={this.state.title} 
+                            maxLength={config.NoteTitleMaxLength} 
+                            required 
+                        />
+                        <TextArea 
+                            onChange={this.textTbOnChange}
+                            placeholder='Notes...' 
+                            value={this.state.text} 
+                            maxLength={config.NoteMaxLength}
+                        />
+                        <Button onClick={this.updateNotes}>{this.state.updateButtonText}</Button>
+                        <Button onClick={this.deleteNote} style={this.state.deleteBtnDisplay} >Delete</Button>
+                    </Form>
+                </header>
+            </div>
         );
     }
 }
