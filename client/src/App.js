@@ -1,20 +1,28 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import Home from "./views/Home/Home";
+
+import DailyTaskList from "./views/DailyTaskList/DailyTaskList";
+import DailyTaskItems from "./views/DailyTaskItems/DailyTaskItems";
 import Notes from "./components/Notes/Notes";
 
-import DailyTasks from "./views/DailyTasks/DailyTasks";
 import NotFound from "./views/NotFound";
 import SignUp from "./views/SignUp/SignUp";
 import Header from "./components/Header/Header";
 import Login from "./components/Login";
 
 class App extends React.Component {
+  inputElement = React.createRef();
   constructor(props) {
     super(props);
     const token = localStorage.getItem("token");
     this.state = {
-      token
+      token,
+      items: [],
+      currentItem: {
+        text: '',
+        key: '',
+      },
     };
   }
 
@@ -32,6 +40,40 @@ class App extends React.Component {
     localStorage.removeItem("token");
     this.setState({ token: null });
   }
+
+  // Daily tasks functionality:
+
+  // delete task
+  deleteItem = key => {
+    const filteredItems = this.state.items.filter(item => {
+      return item.key !== key
+    })
+    this.setState({
+      items: filteredItems,
+    })
+  }
+
+  handleInput = e => {
+    const itemText = e.target.value
+    const currentItem = { text: itemText, key: Date.now() }
+    this.setState({
+      currentItem,
+    })
+  }
+
+  //Add task
+  addItem = e => {
+    e.preventDefault()
+    const newItem = this.state.currentItem
+    if (newItem.text !== '') {
+      const items = [...this.state.items, newItem]
+      this.setState({
+        items: items,
+        currentItem: { text: '', key: '' },
+      })
+    }
+  }
+
   render() {
     return (
       <div>
@@ -66,7 +108,13 @@ class App extends React.Component {
             path="/DailyTasks"
             render={props =>
               this.isUserSignedIn() ? (
-                <DailyTasks {...props} />
+               [ <DailyTaskList
+                addItem={this.addItem}
+                inputElement={this.inputElement}
+                handleInput={this.handleInput}
+                currentItem={this.state.currentItem} />,                 <
+                  DailyTaskItems entries={this.state.items} deleteItem={this.deleteItem} /> 
+              ]
               ) : (
                 <Redirect to="/Home" />
               )
