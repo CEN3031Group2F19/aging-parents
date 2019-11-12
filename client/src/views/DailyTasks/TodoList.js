@@ -6,8 +6,8 @@ class TodoList extends Component {
   }
   render() {
     return (
-      <div className="todoListMain">
-        <div className="header">
+      <div>
+        <div>
           <form onSubmit={this.props.addItem}>
             <input
               placeholder="Task"
@@ -15,7 +15,11 @@ class TodoList extends Component {
               value={this.props.currentItem.text}
               onChange={this.props.handleInput}
             />
+            
+            <div>
             <button type="submit"> Add Task </button>
+            <button type="submit"> Export </button>
+            </div>
           </form>
         </div>
       </div>
