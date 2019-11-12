@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Moment from 'react-moment';
+import { Button, Header, Image, Modal } from 'semantic-ui-react'
 
 
 class TodoList extends Component {
@@ -22,12 +23,24 @@ class TodoList extends Component {
               onChange={this.props.handleInput}
             />           
             <div>
-            <button type="submit"> Add Task </button>
-            <button type="submit"> Export </button>
+            <Button type="submit"> Add Task </Button>
             </div>
           </form>
         </div>
+        
+        <Modal trigger={<Button>Export</Button>}>
+        <Modal.Header>Export to File</Modal.Header>
+        <Modal.Content >
+          <Modal.Description>
+            <Header>Export functionality...</Header>
+            <p>
+              TODO: Export tasks as PDF...
+            </p>
+          </Modal.Description>
+        </Modal.Content>
+      </Modal>
       </div>
+
     )
   }
 }
