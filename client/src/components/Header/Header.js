@@ -39,7 +39,15 @@ class Header extends React.Component {
         onClick={this.handleItemClick}
       />
     ) : null;
-
+    const timeSheet = signedIn ? (
+      <Menu.Item
+        as={Link}
+        to="/Timesheet"
+        name="Timesheet"
+        active={activeItem === "Timesheet"}
+        onClick={this.handleItemClick}
+      />
+    ) : null;
     return (
       <div>
         <Menu pointing>
@@ -52,6 +60,7 @@ class Header extends React.Component {
           />
           {menuItems}
           {dailyTasks}
+          {timeSheet}
           <Menu.Menu position="right">{logInOrOut}</Menu.Menu>
         </Menu>
       </div>
