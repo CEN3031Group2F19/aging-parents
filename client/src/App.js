@@ -2,10 +2,12 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import Home from "./views/Home/Home";
 
+
 import DailyTaskList from "./views/DailyTaskList/DailyTaskList";
 import DailyTaskItems from "./views/DailyTaskItems/DailyTaskItems";
 import Notes from "./components/Notes/Notes";
 
+import Timesheet from "./views/Timesheet/Timesheet";
 import NotFound from "./views/NotFound";
 import SignUp from "./views/SignUp/SignUp";
 import Header from "./components/Header/Header";
@@ -119,7 +121,18 @@ class App extends React.Component {
                 <Redirect to="/Home" />
               )
             }
-          />          
+          />
+          <Route
+            exact
+            path="/Timesheet"
+            render={props =>
+              this.isUserSignedIn() ? (
+                <Timesheet {...props} />
+              ) : (
+                <Redirect to="/Home" />
+              )
+            }
+          />                
           <Route exact path="/Home" component={Home} />
           <Route
             exact
