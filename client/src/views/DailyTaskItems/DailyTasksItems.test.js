@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Home from './Home';
+import DailyTasks from './DailyTasks';
 
 it('renders without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<Home />, div);
+    ReactDOM.render(<DailyTasks />, div);
     ReactDOM.unmountComponentAtNode(div);
 });

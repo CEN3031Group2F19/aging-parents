@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Home from './Home';
+import Timesheet from './Timesheet';
 
 it('renders without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<Home />, div);
+    ReactDOM.render(<Timesheet />, div);
     ReactDOM.unmountComponentAtNode(div);
 });
