@@ -7,9 +7,12 @@ import DailyTaskList from "./views/DailyTaskList/DailyTaskList";
 import DailyTaskItems from "./views/DailyTaskItems/DailyTaskItems";
 import Notes from "./components/Notes/Notes";
 
-import AppointmentView from './views/CalendarView/AppointmentView'
-import CalendarView from './views/CalendarView/CalendarView'
-import CalendarDateView from './views/CalendarView/CalendarDateView'
+import EditMedication from './views/Medications/EditMedication'
+import NewMedication from './views/Medications/NewMedication';
+import Medications from "./views/Medications/Medications";
+import AppointmentView from './views/CalendarView/AppointmentView';
+import CalendarView from './views/CalendarView/CalendarView';
+import CalendarDateView from './views/CalendarView/CalendarDateView';
 import Timesheet from "./views/Timesheet/Timesheet";
 import NotFound from "./views/NotFound";
 import SignUp from "./views/SignUp/SignUp";
@@ -110,6 +113,39 @@ class App extends React.Component {
           />
           <Route
             exact
+            path="/Medications"
+            render={props =>
+              this.isUserSignedIn() ? (
+                <Medications {...props} />
+              ) : (
+                <Redirect to="/Home" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/Medications/New"
+            render={props =>
+              this.isUserSignedIn() ? (
+                <NewMedication {...props} />
+              ) : (
+                <Redirect to="/Medications" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/Medications/Edit/:medicationId"
+            render={props =>
+              this.isUserSignedIn() ? (
+                <EditMedication medicationId={props.match.params.medicationId} />
+              ) : (
+                <Redirect to="/Medications" />
+              )
+            }
+          />
+          <Route
+            exact
             path="/DailyTasks"
             render={props =>
               this.isUserSignedIn() ? (
@@ -141,13 +177,11 @@ class App extends React.Component {
           />
           <Route
           exact
-          path="/Calendar/Date/:year/:month/:day"
+          path="/Calendar/Date/:dateString"
           render={props =>
             this.isUserSignedIn() ? (
               <CalendarDateView
-                year={props.match.params.year} 
-                day={props.match.params.day}
-                month={props.match.params.month - 1} />
+                dateString={props.match.params.dateString}/>
             ) : (
               <Redirect to="/Calendar" />
             )

@@ -24,6 +24,7 @@ class CalendarDateView extends React.Component {
         <>
         {renderDate ?
             <table style={{ width: '100%', justifyContent: 'center', alignItems: 'center', textAlign: 'center', tableLayout: 'fixed'}}>
+                <tbody>
                 <CalendarHeader 
                     year={this.props.year}
                     month={this.props.month}
@@ -33,21 +34,23 @@ class CalendarDateView extends React.Component {
                     includeWeekdays={false}
                 />
                 {enums.hours.map(h => 
-                    <tr style={(enums.hours.indexOf(h) % 2 == 0) ? 
+                    <tr style={(enums.hours.indexOf(h) % 2 === 0) ? 
                         {backgroundColor: '#e2e2e2'}
                     : {}}>
-                        <td colspan={1}><Label style={{width: '100%', fontSize: '100%', textAlign:'right'}}>{h} AM</Label></td>
+                        <td colSpan={1}><Label style={{width: '100%', fontSize: '100%', textAlign:'right'}}>{h} AM</Label></td>
                         <td colSpan={6} ></td>
                     </tr>   
                 )}
                 {enums.hours.map(h => 
-                    <tr style={(enums.hours.indexOf(h) % 2 == 0) ? 
+                    <tr style={(enums.hours.indexOf(h) % 2 === 0) ? 
                         {backgroundColor: '#e2e2e2'}
                     : {}}>
-                        <td colspan={1}><Label style={{width: '100%', fontSize: '100%', textAlign:'right'}}>{h} PM</Label></td>
+                        <td colSpan={1}><Label style={{width: '100%', fontSize: '100%', textAlign:'right'}}>{h} PM</Label></td>
                         <td colSpan={6} ></td>
                     </tr>   
                 )}
+                
+                </tbody>
             </table>
             : <h1>Uh oh! This date doesn't exist.</h1>}
 

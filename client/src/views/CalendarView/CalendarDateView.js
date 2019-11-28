@@ -5,10 +5,29 @@ import { Button } from 'semantic-ui-react';
 class CalendarDateView extends React.Component {
   constructor(props) {
     super(props);
+
+    const dateString = props.dateString.toString();
+    var yearParam = new Date().getFullYear();
+    var monthParam = new Date().getMonth();
+    var dayParam = new Date().getDate();
+
+    if (dateString.length <= 4) {
+      yearParam = dateString;
+    }
+    else if (dateString.length === 6) {
+      yearParam = dateString.substr(0, 4);
+      monthParam = Number(dateString.substr(4, 2)) - 1;
+    }
+    else if (dateString.length === 8){
+      yearParam = dateString.substr(0, 4);
+      monthParam = Number(dateString.substr(4, 2)) - 1;
+      dayParam = dateString.substr(6, 2);
+    }
+
     this.state = {
-        year: props.year,
-        month: props.month,
-        day: props.day
+        year: yearParam,
+        month: monthParam,
+        day: dayParam
     };
   }
 
@@ -40,7 +59,7 @@ class CalendarDateView extends React.Component {
             <CalendarDate
                 year={this.state.year}
                 month={this.state.month}
-                day={this.state.day}
+                day={Number(this.state.day)}
                 onNext={this.nextDay}
                 onPrev={this.prevDay}
             />

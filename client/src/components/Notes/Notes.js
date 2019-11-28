@@ -122,7 +122,7 @@ class Notes extends React.Component {
     };
 
     handleSubmit = async (event) => {
-/*
+
       try {
         const serverUri =
           process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
@@ -130,8 +130,8 @@ class Notes extends React.Component {
         if (event.target.innerText === "Add") {
             // Request hangs here
             const response = await axios.post(`${serverUri}/Notes/api/Add`, {
-                noteId: 2,
-                patientId: 2,
+                noteId: 3,
+                patientId: 3,
                 username: 'brandon@mail.com',
                 title: 'testTitle',
                 content: 'testContent'
@@ -143,7 +143,7 @@ class Notes extends React.Component {
         console.log('Im out yall');
         console.log(error);
       }
-*/
+
       // Submit webrequest to add note to patient profile
       // const sendNoteResp = await axios.get(`submitNoteUrl/${parameters}`);
       
@@ -179,6 +179,7 @@ class Notes extends React.Component {
                     required 
                 />
                 <TextArea 
+                    style={{resize: 'none'}}
                     onChange={this.textTbOnChange}
                     placeholder='Notes...' 
                     value={this.state.text} 

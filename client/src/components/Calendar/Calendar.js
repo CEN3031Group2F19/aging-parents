@@ -8,7 +8,8 @@ class Calendar extends React.Component {
         this.state = {
             year: props.year,
             month: props.month,
-            day: props.day
+            day: props.day,
+            appointments: props.appointments
         };
       }
 
@@ -49,6 +50,7 @@ class Calendar extends React.Component {
     render() {
         return(
             <table style={{ width: '100%', justifyContent: 'center', alignItems: 'center', textAlign: 'center', tableLayout: 'fixed'}}>
+                <tbody>
                 <CalendarHeader 
                     year={this.state.year}
                     month={this.state.month}
@@ -60,7 +62,9 @@ class Calendar extends React.Component {
                     year={this.state.year}
                     month={this.state.month + 1}
                     day={this.state.day}
+                    appointments={this.state.appointments}
                 />
+                </tbody>
             </table>
         );
     }

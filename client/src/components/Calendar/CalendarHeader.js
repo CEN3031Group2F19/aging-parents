@@ -23,7 +23,7 @@ class CalendarHeader extends React.Component {
                     </td>
                     <td 
                         colSpan={5}>
-                        <Label style={{width: '100%'}}>
+                        <Label style={{width: '100%', fontSize: '16px'}}>
                             {enums.months[this.props.month]} {this.props.day}, {this.props.year}
                         </Label></td>
                     <td>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Dropdown, Label, Input, TextArea, Button } from 'semantic-ui-react';
+import { Dropdown, Label, Input, TextArea, Button } from 'semantic-ui-react';
 const enums = require('./CalendarEnums');
 
 const obj = (k, v, t) => {
@@ -20,14 +20,15 @@ class Appointment extends React.Component {
 
         return(
             <table style={{ width: '100%', justifyContent: 'center', alignItems: 'center', textAlign: 'center', tableLayout: 'fixed'}}>
+                <tbody>
                 <tr>
-                    <td colspan={4}><Label style={{width: '100%'}}>{enums.months[this.state.month]} {this.state.day}, {this.state.year}</Label></td>
+                    <td colSpan={4}><Label style={{width: '100%', fontSize: '16px'}}>{enums.months[this.state.month]} {this.state.day}, {this.state.year}</Label></td>
                 </tr>
                 <tr>
-                    <td colspan={4}><Input style={{ width: '100%' }} placeholder="Title"></Input></td>
+                    <td colSpan={4}><Input style={{ width: '100%' }} placeholder="Title"></Input></td>
                 </tr>
                 <tr>
-                    <td colspan={4}><Input style={{ width: '100%' }} placeholder='Location'></Input></td>
+                    <td colSpan={4}><Input style={{ width: '100%' }} placeholder='Location'></Input></td>
                 </tr>
                 <tr>
                         <td><Label style={{ width: '100%',  }}>Time</Label></td>
@@ -56,12 +57,13 @@ class Appointment extends React.Component {
                         /></td>
                 </tr>
                 <tr>
-                    <td colspan={4}><TextArea placeholder='Notes' /></td>
+                    <td colSpan={4}><TextArea placeholder='Notes' /></td>
                 </tr>
                 <tr>
-                    <td colspan={2}><Button style={{ width: '100%' }}>Save</Button></td>
-                    <td colspan={2}><Button style={{ width: '100%' }}>Delete</Button></td>
+                    <td colSpan={2}><Button style={{ width: '100%' }}>Save</Button></td>
+                    <td colSpan={2}><Button style={{ width: '100%' }}>Delete</Button></td>
                 </tr>
+                </tbody>
             </table>
         );
     }
