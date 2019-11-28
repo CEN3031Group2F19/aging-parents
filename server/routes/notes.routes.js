@@ -1,23 +1,32 @@
 var express = require("express");
 var Note = require("../models/note");
 var router = express.Router();
+var mongoose = require('mongoose');
+var config = require('../config/config');
+
+
+mongoose.connect(config.db.uri, { useNewUrlParser: true });
+mongoose.set('useCreateIndex', true);
+mongoose.set('useFindAndModify', false);
 
 router.post("/Notes/api/Add", function(req, res) {
+  console.log('In add api');
+  
   var note = new Note({
-        noteId: req.body.noteId,
-        patientId: req.body.patientId,
-        username: req.body.username,
+        key: req.body.key,
         title: req.body.title,
-        content: req.body.content
+        text: req.body.content
     });
 
   note.save( function(err, res) {
     if (err) 
         return res.json(err);
-    else
-        return res.json(res);
+    return res.json(res);
   });
 });
+
+
+
 
 router.post("/Notes/api/Update", function(req, res) {
 
