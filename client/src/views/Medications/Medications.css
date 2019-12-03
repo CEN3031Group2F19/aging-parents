@@ -21,12 +21,6 @@
     color: #09d3ac;
 }
 
-.CreateNoteForm {
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    height: 100%;
-    width: 100%;
-}
-
 form div {
     width: 100%;
 }
@@ -39,6 +33,19 @@ form button {
   width: 49%;
   height: 5em;
   margin: 0;
+}
+
+table {
+    width: 100%
+}
+
+.medicationItem {
+    display: block;
+    width: 100%;
+}
+
+tr {
+    text-align: center;
 }
 
 textarea {
