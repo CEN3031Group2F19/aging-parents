@@ -17,10 +17,10 @@ class Notes extends React.Component {
         super(props);
         this.state = {
             value: newNote.value,
-            title: newNote.text,
-            text: newNote.noteContent,
+            title: '',
+            text: '',
             notes: [newNote, ...testNotes],
-            updateButtonText: 'Update',
+            updateButtonText: 'Add',
             deleteBtnDisplay: { display:'none' }
         };
     }
@@ -40,15 +40,21 @@ class Notes extends React.Component {
             newNotesArr.splice(1, 0, addedNote);
 
             this.setState({
-                notes: newNotesArr
+                value: newNote.value,
+                title: '',
+                text: '',
+                notes: newNotesArr,
+                updateButtonText: 'Add',
+                deleteBtnDisplay: { display: 'none' }
             });
+            this.handleSubmit(e);
         }
         // Update an existing note
-        else {            
+        else if (this.state.value === 0 && this.state.title !== "") {            
             var newNotesArr = this.state.notes;
 
             for(var i = 0; i < newNotesArr.length; i++) 
-                if (newNotesArr[i].value == this.state.value) {
+                if (newNotesArr[i].value === this.state.value) {
                     newNotesArr[i].text = this.state.title;
                     newNotesArr[i].noteContent = this.state.text;
                     i = newNotesArr.length;
@@ -57,6 +63,7 @@ class Notes extends React.Component {
             this.setState({
                 notes: newNotesArr
             });
+            this.handleSubmit(e);
         }
     };
 
@@ -64,11 +71,18 @@ class Notes extends React.Component {
     deleteNote = (e, sender) => {
         var newNotesArr = this.state.notes;
         for (var i = 1; i < newNotesArr.length; i++)
-            if (newNotesArr[i].value == this.state.value) {
+            if (newNotesArr[i].value === this.state.value) {
                 var index = newNotesArr.indexOf(newNotesArr[i]);
                 if (index > -1) {
                     newNotesArr.splice(index, 1);
-                    this.setState({ notes: newNotesArr, value: newNote.value, title: newNote.text, text: newNote.noteContent });
+                    this.setState({ 
+                        notes: newNotesArr, 
+                        value: newNote.value, 
+                        title: '', 
+                        text: '',
+                        updateButtonText: 'Add',
+                        deleteBtnDisplay: { display: 'none' }
+                    });
                 }
             }
     };
@@ -83,32 +97,51 @@ class Notes extends React.Component {
     titleTbOnChange = event => this.setState({ title: event.target.value });
     textTbOnChange = event => this.setState({ text: event.target.value });
     selectedOnChange = (e, sender) => {
-        if (sender.value == newNote.value) {
+        if (sender.value === newNote.value) {
             this.setState({ 
                 value: newNote.value, 
-                title: newNote.text, 
-                text: newNote.noteContent, 
+                title: '', 
+                text: '', 
                 updateButtonText: 'Add',
                 deleteBtnDisplay: { display:'none' }
             });
         }
         else
             for(var i = 0; i < this.state.notes.length; i++)
-                if (this.state.notes[i].value == sender.value) {
+                if (this.state.notes[i].value === sender.value) {
                     const note = this.state.notes[i];
                     this.setState({ 
                         value: note.value, 
                         title: note.text, 
                         text: note.noteContent,
                         updateButtonText: 'Update',
-                        deleteBtnDisplay: { display:'default' }});
+                        deleteBtnDisplay: { display:'inline-block' }});
             
                     i = this.state.notes.length; // Break loop
                 }
     };
 
     handleSubmit = async (event) => {
-      event.preventDefault();
+
+        try {
+          const serverUri =
+            process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
+  
+          if (event.target.innerText === "Add") {
+              // Request hangs here
+              const response = await axios.post(`${serverUri}/Notes/api/Add`, {
+                  noteId: 3,
+                  patientId: 3,
+                  username: 'brandon@mail.com',
+                  title: 'testTitle',
+                  content: 'testContent'
+              });
+          
+              console.log(JSON.parse(response));
+          }
+        } catch (error) {
+          console.log(error);
+        }
       
       // Submit webrequest to add note to patient profile
       // const sendNoteResp = await axios.get(`submitNoteUrl/${parameters}`);
@@ -118,44 +151,40 @@ class Notes extends React.Component {
   
           // If getNotesResp is BAD
               // append submittedNote to current note list
-              this.props.onSubmit({title: this.state.title, text: this.state.text});
           // else, repopulate notesList with new notes
       // else display a message
     };
 
     render() {
         return (
-            <div className="App">
-                <header className="App-header">
-                    <Form
-                        size='massive'
-                        key='massive'>
-                        <Dropdown
-                            fluid selection
-                            id='notesDropdown'
-                            placeholder='Select Note'
-                            onChange={this.selectedOnChange}
-                            options={this.state.notes}
-                            value={this.state.value}
-                        />
-                        <Input 
-                            onChange={this.titleTbOnChange}
-                            placeholder='Title' 
-                            value={this.state.title} 
-                            maxLength={config.NoteTitleMaxLength} 
-                            required 
-                        />
-                        <TextArea 
-                            onChange={this.textTbOnChange}
-                            placeholder='Notes...' 
-                            value={this.state.text} 
-                            maxLength={config.NoteMaxLength}
-                        />
-                        <Button onClick={this.updateNotes}>{this.state.updateButtonText}</Button>
-                        <Button onClick={this.deleteNote} style={this.state.deleteBtnDisplay} >Delete</Button>
-                    </Form>
-                </header>
-            </div>
+            <Form
+                size='massive'
+                key='massive'>
+                <Dropdown
+                    fluid selection
+                    id='notesDropdown'
+                    placeholder='Select Note'
+                    onChange={this.selectedOnChange}
+                    options={this.state.notes}
+                    value={this.state.value}
+                />
+                <Input 
+                    onChange={this.titleTbOnChange}
+                    placeholder='Title' 
+                    value={this.state.title} 
+                    maxLength={config.NoteTitleMaxLength} 
+                    required 
+                />
+                <TextArea 
+                    style={{resize: 'none'}}
+                    onChange={this.textTbOnChange}
+                    placeholder='Notes...' 
+                    value={this.state.text} 
+                    maxLength={config.NoteMaxLength}
+                />
+                <Button onClick={this.updateNotes}>{this.state.updateButtonText}</Button>
+                <Button onClick={this.deleteNote} style={this.state.deleteBtnDisplay} >Delete</Button>
+            </Form>
         );
     }
 }
