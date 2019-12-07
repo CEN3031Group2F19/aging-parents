@@ -148,7 +148,7 @@ router.post("/forgotpassword", (req, res) => {
           "You are receiving this because you have requested a password reset.\n\n" +
           "Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n" +
           `${
-            process.env.NODE_ENV == "production"
+            process.env.NODE_ENV === "production"
               ? "https://aging-parent-care.herokuapp.com/"
               : "localhost:3000"
           }/resetPassword/${token}\n\n` +

@@ -1,5 +1,5 @@
 var recoveryEmail, recoveryPassword;
-if (process.env.recoveryEmail) {
+if (process.env.NODE_ENV === "production") {
   recoveryEmail = process.env.RECOVERY_EMAIL;
   recoveryPassword = process.env.RECOVERY_PASSWORD;
 } else {
