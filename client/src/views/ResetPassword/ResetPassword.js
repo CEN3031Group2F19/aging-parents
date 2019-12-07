@@ -122,15 +122,14 @@ export default class ResetPassword extends React.Component {
         <h1>Reset Password</h1>
         <Form>
           <Form.Input
-            fluid
+            icon="lock"
+            iconPosition="left"
             label="password"
             onChange={this.handleChange("password")}
             value={password}
             type="password"
           />
-          <Form.Field control={Button} onClick={this.updatePassword}>
-            Submit
-          </Form.Field>
+          <Button content="Submit" primary onClick={this.updatePassword} />
         </Form>
 
         {updated && (

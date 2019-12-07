@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button } from "semantic-ui-react";
+import { Form, Button, Grid, Segment } from "semantic-ui-react";
 //import { Link } from "react-router-dom";
 const axios = require("axios");
 
@@ -35,25 +35,32 @@ class SignUp extends React.Component {
         {" "}
         <div className="column">
           <h1>Create an account</h1>
-          <Form>
-            {/* <Form.Group widths="equal"> */}
-            <Form.Input
-              fluid
-              label="Email"
-              placeholder="example@example.com"
-              onChange={(e, v) => this.setState({ username: v.value })}
-            />{" "}
-            {/* </Form.Group> */}
-            <Form.Input
-              fluid
-              label="Password"
-              type="password"
-              onChange={(e, v) => this.setState({ password: v.value })}
-            />{" "}
-            <Form.Field control={Button} onClick={this.handleSubmit}>
-              Submit
-            </Form.Field>
-          </Form>
+          <Grid columns={1} relaxed="very" stackable>
+            <Grid.Column>
+              <Form>
+                {/* <Form.Group widths="equal"> */}
+                <Form.Input
+                  label="Email"
+                  icon="user"
+                  iconPosition="left"
+                  placeholder="example@example.com"
+                  onChange={(e, v) => this.setState({ username: v.value })}
+                />{" "}
+                {/* </Form.Group> */}
+                <Form.Input
+                  icon="lock"
+                  iconPosition="left"
+                  label="Password"
+                  type="password"
+                  onChange={(e, v) => this.setState({ password: v.value })}
+                />{" "}
+                {/* <Form.Field control={Button} onClick={this.handleSubmit}>
+                  Submit
+                </Form.Field> */}
+                <Button content="Submit" primary onClick={this.handleSubmit} />
+              </Form>
+            </Grid.Column>
+          </Grid>
         </div>
       </div>
     );
