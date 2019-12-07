@@ -53,6 +53,7 @@ class Login extends React.Component {
             </Form.Field>
           </Form>
           <Link to="/signup">Create an account</Link>
+          <Link to="/forgotpassword">Forgot Password</Link>
         </div>
       </div>
     );
