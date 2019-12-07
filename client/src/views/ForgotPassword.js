@@ -32,7 +32,8 @@ class ForgotPassword extends React.Component {
       });
     } else {
       try {
-        const serverUri = "http://localhost:5000";
+        const serverUri =
+          process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
         const response = await axios.post(`${serverUri}/forgotPassword`, {
           email
         });
