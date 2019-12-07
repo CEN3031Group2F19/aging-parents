@@ -1,11 +1,10 @@
 import React from "react";
 import { Form, Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
 
 const axios = require("axios");
-const serverUri = "http://localhost:5000";
-//   process.env.NODE_ENV === "production" ? "" :"http://localhost:5000" ;
+const serverUri =
+  process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
 const loading = {
   margin: "1em",
   fontSize: "24px"

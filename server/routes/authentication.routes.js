@@ -132,15 +132,11 @@ router.post("/forgotpassword", (req, res) => {
       acct.resetPasswordToken = token;
       acct.resetPasswordExpires = Date.now() + 360000;
       acct.save();
-      console.log(
-        require("../config/config").gmail.email,
-        require("../config/config").gmail.password
-      );
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: `${require("../config/config").gmail.email}`,
-          pass: `${require("../config/config").gmail.password}`
+          user: `${require("../config/utils").gmail.email}`,
+          pass: `${require("../config/utils").gmail.password}`
         }
       });
 
