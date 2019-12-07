@@ -2,22 +2,23 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import Home from "./views/Home/Home";
 
-
 import DailyTaskList from "./views/DailyTaskList/DailyTaskList";
 import DailyTaskItems from "./views/DailyTaskItems/DailyTaskItems";
 import Notes from "./components/Notes/Notes";
 
-import EditMedication from './views/Medications/EditMedication'
-import NewMedication from './views/Medications/NewMedication';
+import EditMedication from "./views/Medications/EditMedication";
+import NewMedication from "./views/Medications/NewMedication";
 import Medications from "./views/Medications/Medications";
-import AppointmentView from './views/CalendarView/AppointmentView';
-import CalendarView from './views/CalendarView/CalendarView';
-import CalendarDateView from './views/CalendarView/CalendarDateView';
+import AppointmentView from "./views/CalendarView/AppointmentView";
+import CalendarView from "./views/CalendarView/CalendarView";
+import CalendarDateView from "./views/CalendarView/CalendarDateView";
 import Timesheet from "./views/Timesheet/Timesheet";
 import NotFound from "./views/NotFound";
 import SignUp from "./views/SignUp/SignUp";
 import Header from "./components/Header/Header";
 import Login from "./components/Login";
+import ForgotPassword from "./views/ForgotPassword";
+import ResetPassword from "./views/ResetPassword";
 
 class App extends React.Component {
   inputElement = React.createRef();
@@ -28,9 +29,9 @@ class App extends React.Component {
       token,
       items: [],
       currentItem: {
-        text: '',
-        key: '',
-      },
+        text: "",
+        key: ""
+      }
     };
   }
 
@@ -40,7 +41,6 @@ class App extends React.Component {
   }
 
   isUserSignedIn() {
-    console.log("signed in?", this.state.token);
     return !!this.state.token;
   }
 
@@ -54,33 +54,33 @@ class App extends React.Component {
   // delete task
   deleteItem = key => {
     const filteredItems = this.state.items.filter(item => {
-      return item.key !== key
-    })
+      return item.key !== key;
+    });
     this.setState({
-      items: filteredItems,
-    })
-  }
+      items: filteredItems
+    });
+  };
 
   handleInput = e => {
-    const itemText = e.target.value
-    const currentItem = { text: itemText, key: Date.now() }
+    const itemText = e.target.value;
+    const currentItem = { text: itemText, key: Date.now() };
     this.setState({
-      currentItem,
-    })
-  }
+      currentItem
+    });
+  };
 
   //Add task
   addItem = e => {
-    e.preventDefault()
-    const newItem = this.state.currentItem
-    if (newItem.text !== '') {
-      const items = [...this.state.items, newItem]
+    e.preventDefault();
+    const newItem = this.state.currentItem;
+    if (newItem.text !== "") {
+      const items = [...this.state.items, newItem];
       this.setState({
         items: items,
-        currentItem: { text: '', key: '' },
-      })
+        currentItem: { text: "", key: "" }
+      });
     }
-  }
+  };
 
   render() {
     return (
@@ -138,7 +138,9 @@ class App extends React.Component {
             path="/Medications/Edit/:medicationId"
             render={props =>
               this.isUserSignedIn() ? (
-                <EditMedication medicationId={props.match.params.medicationId} />
+                <EditMedication
+                  medicationId={props.match.params.medicationId}
+                />
               ) : (
                 <Redirect to="/Medications" />
               )
@@ -149,13 +151,18 @@ class App extends React.Component {
             path="/DailyTasks"
             render={props =>
               this.isUserSignedIn() ? (
-               [ <DailyTaskList
-                addItem={this.addItem}
-                inputElement={this.inputElement}
-                handleInput={this.handleInput}
-                currentItem={this.state.currentItem} />,                 <
-                  DailyTaskItems entries={this.state.items} deleteItem={this.deleteItem} /> 
-              ]
+                [
+                  <DailyTaskList
+                    addItem={this.addItem}
+                    inputElement={this.inputElement}
+                    handleInput={this.handleInput}
+                    currentItem={this.state.currentItem}
+                  />,
+                  <DailyTaskItems
+                    entries={this.state.items}
+                    deleteItem={this.deleteItem}
+                  />
+                ]
               ) : (
                 <Redirect to="/Home" />
               )
@@ -167,9 +174,10 @@ class App extends React.Component {
             render={props =>
               this.isUserSignedIn() ? (
                 <CalendarView
-                  year={new Date().getFullYear()} 
+                  year={new Date().getFullYear()}
                   day={new Date().getDate()}
-                  month={new Date().getMonth()} /> 
+                  month={new Date().getMonth()}
+                />
               ) : (
                 <Redirect to="/Home" />
               )
@@ -180,8 +188,7 @@ class App extends React.Component {
             path="/Calendar/Date/:dateString"
             render={props =>
               this.isUserSignedIn() ? (
-                <CalendarDateView
-                  dateString={props.match.params.dateString}/>
+                <CalendarDateView dateString={props.match.params.dateString} />
               ) : (
                 <Redirect to="/Calendar" />
               )
@@ -193,9 +200,10 @@ class App extends React.Component {
             render={props =>
               this.isUserSignedIn() ? (
                 <AppointmentView
-                  year={props.match.params.year} 
+                  year={props.match.params.year}
                   day={props.match.params.day}
-                  month={props.match.params.month - 1} />
+                  month={props.match.params.month - 1}
+                />
               ) : (
                 <Redirect to="/Calendar" />
               )
@@ -211,7 +219,7 @@ class App extends React.Component {
                 <Redirect to="/Home" />
               )
             }
-          />                
+          />
           <Route exact path="/Home" component={Home} />
           <Route
             exact
@@ -223,6 +231,16 @@ class App extends React.Component {
               />
             )}
           />
+          <Route
+            exact
+            path="/resetpassword/:token"
+            component={ResetPassword}
+          ></Route>
+          <Route
+            exact
+            path="/forgotpassword"
+            render={props => <ForgotPassword />}
+          ></Route>
           <Route exact path="/">
             <Redirect to="/Home" />
           </Route>
