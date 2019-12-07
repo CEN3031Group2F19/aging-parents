@@ -66,14 +66,13 @@ class ForgotPassword extends React.Component {
         <Form>
           {/* <Form.Group widths="equal"> */}
           <Form.Input
-            fluid
             label="Email"
+            icon="user"
+            iconPosition="left"
             placeholder="example@example.com"
             onChange={(e, v) => this.setState({ email: v.value })}
           />{" "}
-          <Form.Field control={Button} onClick={this.sendEmail}>
-            Submit
-          </Form.Field>
+          <Button content="Submit" primary onClick={this.sendEmail} />
         </Form>
         {showNullError && (
           <div>
@@ -94,7 +93,6 @@ class ForgotPassword extends React.Component {
             <h3>Password Reset Email Successfully Sent!</h3>
           </div>
         )}
-        <Link to="/home">Go home</Link>
       </div>
     );
   }
