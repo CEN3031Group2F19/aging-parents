@@ -1,9 +1,8 @@
 import React from 'react';
 import './Notes.css';
 import config from './config';
-import { Form, Button, Grid, Segment, Header, TextArea, Input, Dropdown } from 'semantic-ui-react';
+import { Form, Button, TextArea, Input, Dropdown } from 'semantic-ui-react';
 import { throws } from 'assert';
-import hugImage from '../../assets/BACKGROUNDS/BG_GREEN_HUG_IMAGE.png';
 const axios = require("axios");
 
 /* Temporary data to be replaced with a webapi call */
@@ -120,50 +119,34 @@ class Notes extends React.Component {
 
     render() {
         return (
-
-            <Grid container style={{ padding: '3em 0em' }}>
-
-                <Grid.Row>
-                    <Grid.Column>
-                        <Segment tertiary>
-                            <Header as='h1'>
-                                Notes
-                    </Header>
-                        </Segment>
-                        <img src={hugImage} alt="bloodPressure" centered fluid />
-                    </Grid.Column>
-                </Grid.Row>
-
-
-                <Form
-                    size='massive'
-                    key='massive'
-                    className='NoteForm'>
-                    <Dropdown
-                        fluid selection
-                        id='notesDropdown'
-                        placeholder='Select Note'
-                        onChange={this.selectedOnChange}
-                        options={this.state.notes}
-                        value={this.state.value}
-                    />
-                    <Input
-                        onChange={this.titleTbOnChange}
-                        placeholder='Title'
-                        value={this.state.title}
-                        maxLength={config.NoteTitleMaxLength}
-                    />
-                    <TextArea
-                        style={{ resize: 'none' }}
-                        onChange={this.textTbOnChange}
-                        placeholder='Notes...'
-                        value={this.state.text}
-                        maxLength={config.NoteMaxLength}
-                    />
-                    <Button onClick={this.NotesBtn_Click}>{this.state.updateButtonText}</Button>
-                    <Button onClick={this.NotesBtn_Click} style={this.state.deleteBtnDisplay} >Delete</Button>
-                </Form>
-            </Grid>
+            <Form
+                size='massive'
+                key='massive'
+                className='NoteForm'>
+                <Dropdown
+                    fluid selection
+                    id='notesDropdown'
+                    placeholder='Select Note'
+                    onChange={this.selectedOnChange}
+                    options={this.state.notes}
+                    value={this.state.value}
+                />
+                <Input
+                    onChange={this.titleTbOnChange}
+                    placeholder='Title'
+                    value={this.state.title}
+                    maxLength={config.NoteTitleMaxLength}
+                />
+                <TextArea
+                    style={{ resize: 'none' }}
+                    onChange={this.textTbOnChange}
+                    placeholder='Notes...'
+                    value={this.state.text}
+                    maxLength={config.NoteMaxLength}
+                />
+                <Button onClick={this.NotesBtn_Click}>{this.state.updateButtonText}</Button>
+                <Button onClick={this.NotesBtn_Click} style={this.state.deleteBtnDisplay} >Delete</Button>
+            </Form>
         );
     }
 }
