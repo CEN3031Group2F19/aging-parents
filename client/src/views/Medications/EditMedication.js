@@ -1,6 +1,8 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import './Medications.css';
-import { Select, Table, TableHeader, TableBody, TableRow, TableCell, Label, Form, Button, TextArea, Input, Dropdown } from 'semantic-ui-react';
+import { Select, Table, TableBody, Label, Button, TextArea, Input } from 'semantic-ui-react';
+const axios = require("axios");
 
 const frequencyOptions = [
     {key: 0, text: '', value: 'None'},
@@ -22,38 +24,89 @@ const timeOptions = [
     {key: 1, text: 'Morning', value: 'Morning'},
     {key: 2, text: 'Afternoon', value: 'Afternoon'},
     {key: 3, text: 'Evening', value: 'Evening'}
-]
-
-const testMedications = [
-    {key: 1, name: 'Medication 1', frequency: 'Mondays', timeOfDay: '', pharmacist: "Joe's Pharmacy", notes: 'Take once a day'},
-    {key: 2, name: 'Medication 2', frequency: 'Daily', timeOfDay: 'Morning', pharmacist: "CVS", notes: ''},
-    {key: 3, name: 'Medication 3', frequency: 'Saturdays', timeOfDay: 'Evening', pharmacist: "Publix", notes: 'Take on an empty stomach'},
-    {key: 4, name: 'Medication 4', frequency: '', timeOfDay: 'Morning', pharmacist: "Walgreens", notes: 'Take with water'},
-    {key: 5, name: 'Medication 5', frequency: 'Weekly', timeOfDay: 'Afternoon', pharmacist: "", notes: 'Take during a meal'}
 ];
 
 class EditMedication extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+            key: -1,
+            name: '',
+            frequency: '',
+            timeOfDay: '',
+            pharmacist: '',
+            notes: ''
         };
+
+        this.getMedication(props.medicationId);
     }
 
-    getMedication = (medicationId) => {
-        for (var i = 0; i < testMedications.length; i++) 
-            if (testMedications[i].key == medicationId)
-                return testMedications[i];
+    getMedication = async (id) => {
+
+        const serverUri =
+            process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
         
-        return null;
+        try {
+            const response = await axios.get(
+                `${serverUri}/Medications/api/Medications/${id}`);
+
+            if (response.data !== "") {
+                const med = response.data;
+
+                this.setState({
+                    key: med.key,
+                    name: med.name,
+                    frequency: med.frequency,
+                    timeOfDay: med.timeOfDay,
+                    pharmacist: med.pharmacist,
+                    notes: med.notes
+                });
+            }
+            else 
+                throw new Error('Medication not found.');
+            
+        } catch (error) {
+          console.log(error);
+          this.setState({
+              key: null
+          });
+        }
+    }
+
+    postRequest = async (path, body) => {
+        try {
+            const serverUri =
+            process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
+
+            await axios.post(`${serverUri}${path}`, body);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    ButtonClick = (e, sender) => {
+        if (e.target.innerText === "Save")  {
+            this.postRequest('/Medications/api/Update',
+            {
+                key: this.state.key,
+                name: this.state.name,
+                frequency: this.state.frequency,
+                timeOfDay: this.state.timeOfDay,
+                pharmacist: this.state.pharmacist,
+                notes: this.state.notes
+            });
+        }
+        else if (e.target.innerText === "Delete") {
+            this.postRequest('/Medications/api/Delete',
+            { key: this.state.key });
+
+        this.getMedication();
+        } 
     }
 
     render() {
-
-        const medication = this.getMedication(this.props.medicationId);
-
         return (
-            (medication !== null) ? 
+            (this.state.key !== null) ? 
             <>
             <Label 
                 style={{width: '100%', textAlign: 'center', fontSize: '16px'}}
@@ -64,37 +117,51 @@ class EditMedication extends React.Component {
                 <TableBody>
                     <Input className='medicationItem'
                         placeholder='Medication Name'
-                        value={medication.name}
+                        onChange={(event) => this.setState(
+                            { name: event.target.value })}
+                        value={this.state.name}
                     />
                     <Select className='medicationItem'
                         placeholder='Frequency'
                         options={frequencyOptions}
-                        value={medication.frequency}
+                        onChange={(event) => this.setState(
+                            { frequency: event.target.innerText })}
+                        value={this.state.frequency}
                     />
                     <Select className='medicationItem'
                         placeholder='Time of Day'
                         options={timeOptions}
-                        value={medication.timeOfDay}
+                        onChange={(event) => this.setState(
+                            { timeOfDay: event.target.innerText })}
+                        value={this.state.timeOfDay}
                     />
                     <Input className='medicationItem'
                         placeholder='Pharmacist'
-                        value={medication.pharmacist}
+                        onChange={(event) => this.setState(
+                            { pharmacist: event.target.value })}
+                        value={this.state.pharmacist}
                     />
                     <TextArea  className='medicationItem'
                         style={{resize: 'none'}}
                         placeholder='Medication Notes...'
-                        value={medication.notes}
+                        onChange={(event) => this.setState(
+                            { notes: event.target.value })}
+                        value={this.state.notes}
                     />
                     <tr>
                         <Button
                                 style={{width: '49%', display: 'inline-block'}}
+                                onClick={this.ButtonClick}
                             >Save</Button>
                         <Button
                                 style={{width: '49%', display: 'inline-block', float: 'right'}}
+                                onClick={this.ButtonClick}
                             >Delete</Button>
                     </tr>
                 </TableBody>
-            </Table></> : <></>
+            </Table></> 
+            : 
+            <Redirect to="/Medications" />
         );
     }
 }

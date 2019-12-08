@@ -22,7 +22,7 @@ router.post("/Medications/api/Add", function(req, res) {
 
 // Update an existing medication - Find by key
 router.post("/Medications/api/Update", function(req, res) {
-  Medication.updateOne( { key: req.body.key }, 
+  Medication.updateOne( { key: new mongodb.ObjectID(req.body.key) }, 
     { $set: {
       name: req.body.name,
       notes: req.body.notes,
@@ -38,17 +38,28 @@ router.post("/Medications/api/Update", function(req, res) {
 
 // Delete existing appointment by key
 router.post("/Medications/api/Delete", function(req, res) {
-  Medication.findOneAndDelete({ key: req.body.key }, function(err, results) {
-    if (err) console.log(err);
-    res.send(results);
+  Medication.findOneAndDelete({ key: new mongodb.ObjectID(req.body.key) }, 
+    function(err, results) {
+      if (err) console.log(err);
+      res.send(results);
   });
 });
 
 // Get all appointments
 router.get("/Medications/api/Medications", function(req, res) {
-  Medication.find({}, function(err, results) {
-    if (err) console.log(err);
-    res.send(results);
+  Medication.find({}, 
+    function(err, results) {
+      if (err) console.log(err);
+      res.send(results);
+  });
+});
+
+// Get one appointment by key
+router.get("/Medications/api/Medications/:key", function(req, res) {
+  Medication.findOne({ key: new mongodb.ObjectID(req.params.key) }, 
+    function(err, results) {
+      if (err) console.log(err);
+      res.send(results);
   });
 });
 

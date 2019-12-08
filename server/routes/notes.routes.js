@@ -18,7 +18,7 @@ router.post("/Notes/api/Add", function(req, res) {
 });
 
 router.post("/Notes/api/Update", function(req, res) {
-  Note.updateOne( { key: req.body.key }, {$set: {title: req.body.title, text: req.body.text } },
+  Note.updateOne( { key: new mongodb.ObjectID(req.body.key) }, {$set: {title: req.body.title, text: req.body.text } },
     function(err, results) {
       if (err) console.log(err);
       res.send(results);
@@ -26,7 +26,7 @@ router.post("/Notes/api/Update", function(req, res) {
 });
 
 router.post("/Notes/api/Delete", function(req, res) {
-  Note.findOneAndDelete({ key: req.body.key }, function(err, results) {
+  Note.findOneAndDelete({ key: new mongodb.ObjectID(req.body.key) }, function(err, results) {
     if (err) console.log(err);
     res.send(results);
   });
