@@ -24,7 +24,7 @@ class DailyTaskList extends Component {
                   Daily Tasks
                   </Header>
               </Segment>
-              <img src={bloodPressure} alt="bloodPressure" centered fluid />
+              <Image src={bloodPressure} alt="bloodPressure" centered size='huge' />
             </Grid.Column>
           </Grid.Row>
 
@@ -38,7 +38,7 @@ class DailyTaskList extends Component {
                     value={this.props.currentItem.text}
                     onChange={this.props.handleInput}
                   />
-                  <Button type="submit"> Add Task </Button>
+                  <Button floated='right' type="submit"> Add Task </Button>
 
                 </form>
               </Header>
@@ -48,17 +48,7 @@ class DailyTaskList extends Component {
         {/* <Moment></Moment> */}
 
 
-        {/* <Modal trigger={<Button>Export</Button>}>
-        <Modal.Header>Export to File</Modal.Header>
-        <Modal.Content >
-          <Modal.Description>
-            <Header>Export functionality...</Header>
-            <p>
-              TODO: Export tasks as PDF...
-            </p>
-          </Modal.Description>
-        </Modal.Content>
-      </Modal> */}
+
       </div>
 
     )
