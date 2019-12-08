@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import React, {
+  Component
+} from 'react';
 import Moment from 'react-moment';
 
 class DailyTaskItems extends Component {
-  createTasks = item => {
+  createTasks(item) {
 
     return (
-      <li key={item.key} onClick={() => this.props.deleteItem(item.key)}>
-        
+      <li key={item.key}
+        onClick={() => this.props.deleteItem(item.key)} >
         {item.text}
-        {/* - Add timestamp */}
-
       </li>
     )
   }
@@ -17,7 +17,7 @@ class DailyTaskItems extends Component {
     const taskEntries = this.props.entries
     const listItems = taskEntries.map(this.createTasks)
 
-    return <ul>{listItems}</ul>
+    return <ul > {listItems} </ul>
   }
 }
 
