@@ -2,15 +2,11 @@ import React from 'react';
 import './Notes.css';
 import config from './config';
 import { Form, Button, TextArea, Input, Dropdown } from 'semantic-ui-react';
+import { throws } from 'assert';
 const axios = require("axios");
 
 /* Temporary data to be replaced with a webapi call */
 const newNote = { value: 0, text: "New Note", noteContent: ""};
-const testNotes = [ //Retrieve all notes from patient profile
-    { value: 1, text: "Random Note 1", noteContent: "Here is some random text for Random Note 1"},
-    { value: 2, text: "Randomer Note 2", noteContent: "Here is some more random text for Randomer Note 2"},
-    { value: 3, text: "Favorite Food", noteContent: "Fried chicken\nRice and beans\nCereal with Almond Milk"},
-];
 
 class Notes extends React.Component {
     constructor(props) {
@@ -19,83 +15,56 @@ class Notes extends React.Component {
             value: newNote.value,
             title: '',
             text: '',
-            notes: [newNote, ...testNotes],
+            notes: [],
             updateButtonText: 'Add',
             deleteBtnDisplay: { display:'none' }
         };
+        this.populateNotes();
     }
 
-    // Add or update a note
-    updateNotes = (e, sender) => {
-        const vals = this.enumerateNoteValues();
-
-        // Add a new note - noteId will be a positive integer
-        if (this.state.value < 1) {
-            var noteId = 1;
-            while (vals.includes(noteId.toString())) noteId++;
-
-            var newNotesArr = this.state.notes;
-
-            var addedNote = {value: noteId, text: this.state.title, noteContent: this.state.text};
-            newNotesArr.splice(1, 0, addedNote);
-
-            this.setState({
-                value: newNote.value,
-                title: '',
-                text: '',
-                notes: newNotesArr,
-                updateButtonText: 'Add',
-                deleteBtnDisplay: { display: 'none' }
-            });
-            this.handleSubmit(e);
-        }
-        // Update an existing note
-        else if (this.state.value === 0 && this.state.title !== "") {            
-            var newNotesArr = this.state.notes;
-
-            for(var i = 0; i < newNotesArr.length; i++) 
-                if (newNotesArr[i].value === this.state.value) {
-                    newNotesArr[i].text = this.state.title;
-                    newNotesArr[i].noteContent = this.state.text;
-                    i = newNotesArr.length;
-                }
-
-            this.setState({
-                notes: newNotesArr
-            });
-            this.handleSubmit(e);
-        }
-    };
-
-    // Delete a note from state
-    deleteNote = (e, sender) => {
-        var newNotesArr = this.state.notes;
-        for (var i = 1; i < newNotesArr.length; i++)
-            if (newNotesArr[i].value === this.state.value) {
-                var index = newNotesArr.indexOf(newNotesArr[i]);
-                if (index > -1) {
-                    newNotesArr.splice(index, 1);
-                    this.setState({ 
-                        notes: newNotesArr, 
-                        value: newNote.value, 
-                        title: '', 
-                        text: '',
-                        updateButtonText: 'Add',
-                        deleteBtnDisplay: { display: 'none' }
-                    });
-                }
-            }
-    };
-
-    enumerateNoteValues = () => {
-        var values = [];
-        for(var val in this.state.notes) 
-            values.push(val);
-        return values;
-    };
-
+    newNoteState = e => this.setState({
+        value: newNote.value,
+        title: '',
+        text: '',
+        updateButtonText: 'Add',
+        deleteBtnDisplay: { display:'none' }
+    });
+    
     titleTbOnChange = event => this.setState({ title: event.target.value });
     textTbOnChange = event => this.setState({ text: event.target.value });
+
+    populateNotes = async () => {
+        const serverUri =
+            process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
+        
+        try {
+            const response = await axios.get(`${serverUri}/Notes/api/Notes`);
+
+            var dbNotes = [];
+
+            response.data.forEach(el => {
+                dbNotes.splice(0, 0, {value: el.key, text: el.title, noteContent: el.text});
+            });
+
+            this.setState({ notes: [newNote, ...dbNotes] });
+        } catch (error) {
+          console.log(error);
+        }
+    };
+
+    postRequest = async (path, body) => {
+        try {
+            const serverUri =
+            process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
+
+            await axios.post(`${serverUri}${path}`, body);
+
+            this.populateNotes();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     selectedOnChange = (e, sender) => {
         if (sender.value === newNote.value) {
             this.setState({ 
@@ -121,45 +90,41 @@ class Notes extends React.Component {
                 }
     };
 
-    handleSubmit = async (event) => {
-
-        try {
-          const serverUri =
+    NotesBtn_Click = async (e, sender) => {
+        const serverUri =
             process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
-  
-          if (event.target.innerText === "Add") {
-              // Request hangs here
-              const response = await axios.post(`${serverUri}/Notes/api/Add`, {
-                  noteId: 3,
-                  patientId: 3,
-                  username: 'brandon@mail.com',
-                  title: 'testTitle',
-                  content: 'testContent'
-              });
-          
-              console.log(JSON.parse(response));
-          }
-        } catch (error) {
-          console.log(error);
+
+        if (e.target.innerText === "Add") 
+        {
+            this.postRequest("/Notes/api/Add", { 
+                title: this.state.title, 
+                text: this.state.text 
+            });
+            this.newNoteState();
         }
-      
-      // Submit webrequest to add note to patient profile
-      // const sendNoteResp = await axios.get(`submitNoteUrl/${parameters}`);
-      
-      // If sendNoteResp is OK, submit another request to get all notes
-          // const getNotesResp = await axios.get(`getNotesUrl/${parameters}`);
-  
-          // If getNotesResp is BAD
-              // append submittedNote to current note list
-          // else, repopulate notesList with new notes
-      // else display a message
-    };
+        else if (e.target.innerText === "Update") 
+        {
+            this.postRequest("/Notes/api/Update", 
+            { 
+                key: this.state.value,
+                title: this.state.title, 
+                text: this.state.text 
+            });
+        } 
+        else if (e.target.innerText === "Delete") 
+        {
+            this.postRequest("/Notes/api/Delete", 
+                { key: this.state.value });
+            this.newNoteState();
+        }
+    }
 
     render() {
         return (
             <Form
                 size='massive'
-                key='massive'>
+                key='massive'
+                className='NoteForm'>
                 <Dropdown
                     fluid selection
                     id='notesDropdown'
@@ -172,8 +137,7 @@ class Notes extends React.Component {
                     onChange={this.titleTbOnChange}
                     placeholder='Title' 
                     value={this.state.title} 
-                    maxLength={config.NoteTitleMaxLength} 
-                    required 
+                    maxLength={config.NoteTitleMaxLength}
                 />
                 <TextArea 
                     style={{resize: 'none'}}
@@ -182,8 +146,8 @@ class Notes extends React.Component {
                     value={this.state.text} 
                     maxLength={config.NoteMaxLength}
                 />
-                <Button onClick={this.updateNotes}>{this.state.updateButtonText}</Button>
-                <Button onClick={this.deleteNote} style={this.state.deleteBtnDisplay} >Delete</Button>
+                <Button onClick={this.NotesBtn_Click}>{this.state.updateButtonText}</Button>
+                <Button onClick={this.NotesBtn_Click} style={this.state.deleteBtnDisplay} >Delete</Button>
             </Form>
         );
     }

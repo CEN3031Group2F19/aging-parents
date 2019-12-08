@@ -1,8 +1,9 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
+var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var Task = new Schema({
-  key: { type: Number, unique: true },
+  key: { type: ObjectId, unique: true, required: true },
   text: { type: String, required: true },
   completed: {type: Boolean, required: true, default: false},
   userEmail: {type: String, required: false, default: null},
