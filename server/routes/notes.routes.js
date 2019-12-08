@@ -1,32 +1,43 @@
 var express = require("express");
 var Note = require("../models/note");
 var router = express.Router();
-var mongoose = require("mongoose");
-// var config = require('../config/utils');
+var mongodb = require('mongodb');
 
-// mongoose.connect(config.db.uri, { useNewUrlParser: true });
-// mongoose.set('useCreateIndex', true);
-// mongoose.set('useFindAndModify', false);
-
+// Add a new note
 router.post("/Notes/api/Add", function(req, res) {
-  console.log("In add api");
-
   var note = new Note({
-    key: req.body.key,
+    key: new mongodb.ObjectID(),  
     title: req.body.title,
-    text: req.body.content
+    text: req.body.text
   });
-
-  note.save(function(err, res) {
-    if (err) return res.json(err);
-    return res.json(res);
+  note.save( function(err, note) {
+    if (err) 
+        return res.status(400).json(err);
+    res.status(200).json(note);
   });
 });
 
-router.post("/Notes/api/Update", function(req, res) {});
+router.post("/Notes/api/Update", function(req, res) {
+  Note.updateOne( { key: req.body.key }, {$set: {title: req.body.title, text: req.body.text } },
+    function(err, results) {
+      if (err) console.log(err);
+      res.send(results);
+  });
+});
 
-router.post("/Notes/api/Delete", function(req, res) {});
+router.post("/Notes/api/Delete", function(req, res) {
+  Note.findOneAndDelete({ key: req.body.key }, function(err, results) {
+    if (err) console.log(err);
+    res.send(results);
+  });
+});
 
-router.get("/Notes/api/Notes", function(req, res) {});
+// Get all notes
+router.get("/Notes/api/Notes", function(req, res) {
+  Note.find({}, function(err, results) {
+    if (err) console.log(err);
+    res.send(results);
+  });
+});
 
 module.exports = router;
