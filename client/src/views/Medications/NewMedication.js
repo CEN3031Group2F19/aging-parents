@@ -1,6 +1,7 @@
 import React from 'react';
 import './Medications.css';
 import { Select, Table, TableHeader, TableBody, TableRow, TableCell, Label, Form, Button, TextArea, Input, Dropdown } from 'semantic-ui-react';
+const axios = require("axios");
 
 const frequencyOptions = [
     {key: 0, text: '', value: 'None'},
@@ -28,9 +29,41 @@ class NewMedication extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+            name: '',
+            frequency: '',
+            timeOfDay: '',
+            pharmacist: '',
+            notes: ''
         };
     }
+
+    AddBtn_Click = async () => {
+        try {
+            const serverUri =
+            process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
+
+            const body = {
+                name: this.state.name,
+                frequency: this.state.frequency,
+                timeOfDay: this.state.timeOfDay,
+                pharmacist: this.state.pharmacist,
+                notes: this.state.notes
+            }
+            await axios.post(`${serverUri}/Medications/api/Add`, body);
+
+            this.setState({
+                name: '',
+                frequency: '',
+                timeOfDay: '',
+                pharmacist: '',
+                notes: ''
+            });
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     render() {
         return (
             <>
@@ -41,32 +74,46 @@ class NewMedication extends React.Component {
                 </Label>
                 <Table>
                     <TableBody>
-                        <Input className='medicationItem'
+                        <Input 
+                            className='medicationItem'
                             placeholder='Medication Name'
+                            onChange={(event) => this.setState(
+                                { name: event.target.value })}
+                            value={ this.state.name }
                         />
                         <Select className='medicationItem'
                             placeholder='Frequency'
                             options={frequencyOptions}
+                            onChange={(event) => this.setState(
+                                { frequency: event.target.innerText })}
+                            value={ this.state.frequency }
                         />
                         <Select className='medicationItem'
                             placeholder='Time of Day'
                             options={timeOptions}
+                            onChange={(event) => this.setState(
+                                { timeOfDay: event.target.innerText })}
+                            value={ this.state.timeOfDay }
                         />
                         <Input className='medicationItem'
                             placeholder='Pharmacist'
+                            onChange={(event) => this.setState(
+                                { pharmacist: event.target.value })}
+                            value={ this.state.pharmacist }
                         />
                         <TextArea  className='medicationItem'
                             style={{resize: 'none'}}
                             placeholder='Medication Notes...'
+                            onChange={(event) => this.setState(
+                                { notes: event.target.value })}
+                            value={ this.state.notes }
                         />
 
                         <tr>
                             <Button
-                                    style={{width: '49%', display: 'inline-block'}}
-                                >Save</Button>
-                            <Button
-                                    style={{width: '49%', display: 'inline-block', float: 'right'}}
-                                >Delete</Button>
+                                    style={{width: '100%', display: 'inline-block'}}
+                                    onClick={this.AddBtn_Click}
+                                >Add</Button>
                         </tr>
                     </TableBody>
                 </Table>

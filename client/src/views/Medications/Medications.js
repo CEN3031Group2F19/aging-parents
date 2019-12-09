@@ -2,27 +2,42 @@ import React from 'react';
 import './Medications.css';
 import MedicationList from './MedicationList';
 import { Label, Form, Button, TextArea, Input, Dropdown } from 'semantic-ui-react';
-
-const medications = [
-    {key: 1, title: 'Medication 1'},
-    {key: 2, title: 'Medication 2'},
-    {key: 3, title: 'Medication 3'},
-    {key: 4, title: 'Medication 4'},
-    {key: 5, title: 'Medication 5'},
-];
+const axios = require("axios");
 
 class Medications extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+            medications: []
         };
+
+        this.populateMedications();
     }
+    
+    populateMedications = async () => {
+        const serverUri =
+            process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
+        
+        try {
+            const response = await axios.get(`${serverUri}/Medications/api/Medications`);
+
+            var dbMedications = [];
+
+            response.data.forEach(el => {
+                dbMedications.splice(0, 0, {key: el.key, title: el.name });
+            });
+
+            this.setState({ medications: [...dbMedications] });
+        } catch (error) {
+          console.log(error);
+        }
+    };
+
     render() {
         return (
             <>
                 <Label style={{width: '100%', textAlign:'center', fontSize: '16px'}}>Medications</Label>
-                <MedicationList medications={medications}/>
+                <MedicationList medications={this.state.medications}/>
             </>
         );
     }

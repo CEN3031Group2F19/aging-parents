@@ -7,7 +7,6 @@ class CalendarDateView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        
     };
   }
 
@@ -33,23 +32,25 @@ class CalendarDateView extends React.Component {
                     onPrev={this.props.onPrev}
                     includeWeekdays={false}
                 />
-                {enums.hours.map(h => 
-                    <tr style={(enums.hours.indexOf(h) % 2 === 0) ? 
-                        {backgroundColor: '#e2e2e2'}
-                    : {}}>
-                        <td colSpan={1}><Label style={{width: '100%', fontSize: '100%', textAlign:'right'}}>{h} AM</Label></td>
-                        <td colSpan={6} ></td>
-                    </tr>   
-                )}
-                {enums.hours.map(h => 
-                    <tr style={(enums.hours.indexOf(h) % 2 === 0) ? 
-                        {backgroundColor: '#e2e2e2'}
-                    : {}}>
-                        <td colSpan={1}><Label style={{width: '100%', fontSize: '100%', textAlign:'right'}}>{h} PM</Label></td>
-                        <td colSpan={6} ></td>
-                    </tr>   
-                )}
-                
+                {this.props.appointments.map(appt =>{
+                    var date = new Date(appt.startTime);
+                    var startTime = new Date(appt.startTime)
+                        .toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    var endTime = new Date(appt.endTime)
+                        .toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+                    if (date.getFullYear() === Number(this.props.year)
+                        && date.getMonth() === Number(this.props.month)
+                        && date.getDate() === Number(this.props.day)) {
+                        return <tr style={(this.props.appointments.indexOf(appt) % 2 === 0) ? 
+                            {backgroundColor: '#e2e2e2'}
+                        : {}}>
+                            <td colSpan={3}><a href={`/Calendar/Appointment/Edit/${appt.key}`}><Label style={{width: '100%', fontSize: '100%', textAlign:'center'}}>{appt.title}</Label></a></td>
+                            <td colSpan={2}>{startTime}</td>
+                            <td colSpan={2}>{endTime}</td>
+                        </tr>
+                    }
+                })}
                 </tbody>
             </table>
             : <h1>Uh oh! This date doesn't exist.</h1>}
