@@ -1,0 +1,32 @@
+.Header-page {
+  padding: 5px;
+  text-align: center;    
+  background: #ee8422;
+  color: #ffffff;
+  font-size: 30px;
+}
+
+.Header-logo {
+	width: 30px;
+	height: 30px;  
+}
+
+.Header-box {
+	display: flex;
+	flex-flow: row nowrap; 
+	align-items: center;
+	justify-content: center;
+}
+
+.Margin-quad {
+	margin-right: 20px;
+}
+
+.Margin-single {
+	margin-right: 5px;
+}
+
+a.Is-disable {
+	cursor: not-allowed;
+	pointer-events: none;
+}

@@ -1,0 +1,220 @@
+.Form-orange {
+  padding: 10px;
+  text-align: left;
+  background: #f79a22;
+  color: #ffffff;
+  font-size: 20px;
+  height: 100%;
+  font-weight: bold;
+}
+
+
+/*input[type="submit"] {
+  background-image: url("../../assets/BUTTON_ADD.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  font-weight: bold;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  height: 50px; 
+  width: 120px;
+  border-radius: 1em;
+}
+*/
+
+input[type="submit"].form-small-button , button.form-small-button {
+  background: url("../../assets/BUTTON_ADD.png");
+  background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	width: 100px;
+	height: 40px;
+	text-indent: -9999px;
+  display: inline-block;
+  cursor: pointer;  
+  border-radius: 5em;
+  border:none;
+}
+
+.box {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+th, td {
+  padding: 4px;
+}
+
+tfoot td {
+	padding: 20px;
+}
+
+.section-padding {
+  padding: 7px
+}
+
+.flex-container-vertical {
+  display: flex;
+  flex-flow: column nowrap;  
+}
+
+.section-whole-page {
+  display: inline-block;
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-position: left 11%;
+  background-size: contain;
+  background-attachment: scroll;
+}
+.height-full-page {
+  min-height: 100vh;
+}
+
+.flex-container-horizontal {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-container-align-start {
+  align-items: flex-start;
+}
+
+.flex-items-wholeWidth {
+  flex: 1 1 auto;
+}
+
+.flex-items-wholeWidth {
+  flex: 1 1 auto;
+}
+
+.background-AppDarkOrange {
+  background-color: #ee8422;
+}
+
+.background-AppWhite {
+  background-color: #ffffff;
+}
+
+.background-AppOrange {
+ background-color: #f79a22;
+}
+
+.background-AppDarkGrey {
+  background-color: #606161;
+}
+
+.background-AppGreen {
+  background-color: #a1bb3e;
+}
+
+.background-red {
+  background-color: red;
+}
+
+.flex-content-start {
+    justify-content: flex-start;
+}
+
+.flex-content-end {
+    justify-content: flex-end;
+}
+
+.flex-last-row {
+  flex: 1 1 auto;
+}
+
+.stripedTable tbody > tr:nth-child(odd) {
+  background: #eaeaea;
+}
+
+.stripedTable tbody > tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.cell-whole-width {
+  width: 100%;
+}
+
+.text-white-bold {
+  text-align: center;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.stripedTable {
+  border-collapse: collapse;
+}
+.stripedTable td, th {
+  border: 2px solid #ffffff; 
+}
+.stripedTable tr > th {
+  border-top: 0;
+}
+.stripedTable tr td:first-child, tr th:first-child {
+  border-left: 0;
+}
+.stripedTable tr:last-child td {
+  border-bottom: 0;
+}
+.stripedTable tr td:last-child, tr th:last-child {
+  border-right: 0;
+}
+
+label.labelpadded {
+    display: block; /* add this */
+    padding-right: 20px;
+    text-align: left;
+}
+
+.Table
+    {
+        display: table;
+    }
+
+.Title
+{
+    display: table-caption;
+    text-align: center;
+    font-weight: bold;
+    font-size: larger;
+}
+
+.Heading
+{
+    display: table-row;
+    font-weight: bold;
+    text-align: center;
+}
+
+.Body
+{
+    display: table-row-group;
+
+}
+
+.Row
+{
+    display: table-row;
+}
+
+.Cell
+{
+    display: table-cell;
+    /*border: solid;*/
+    /*border-width: thin;*/
+/*    padding-left: 5px;
+    padding-right: 5px;*/
+    padding: 5px;
+    width: 100%;   
+}
+
+.Foot
+{
+    display: table-footer-group;
+
+}
