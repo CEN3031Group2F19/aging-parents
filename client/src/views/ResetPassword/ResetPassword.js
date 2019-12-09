@@ -1,6 +1,7 @@
 import React from "react";
 import { Form, Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import HeaderPage from "../../components/Header-Page/HeaderPage";
 
 const axios = require("axios");
 const serverUri =
@@ -99,7 +100,7 @@ export default class ResetPassword extends React.Component {
     if (error) {
       return (
         <div>
-          <h1>Reset Password</h1>
+          <HeaderPage title="Reset Password" />
           <div style={loading}>
             <h4>Problem resetting password. Please send another reset link.</h4>
             <Link to="/home">Go home</Link>
@@ -112,19 +113,20 @@ export default class ResetPassword extends React.Component {
     if (isLoading) {
       return (
         <div>
-          <h1>Reset Password</h1>
+          <HeaderPage title="Reset Password" />
+
           <div>Loading User Data...</div>
         </div>
       );
     }
     return (
       <div>
-        <h1>Reset Password</h1>
+        <HeaderPage title="Reset Password" />
         <Form>
           <Form.Input
             icon="lock"
             iconPosition="left"
-            label="password"
+            label="New Password"
             onChange={this.handleChange("password")}
             value={password}
             type="password"

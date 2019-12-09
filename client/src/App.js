@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
+import "./App.css";
 import Home from "./views/Home/Home";
-
 import DailyTaskList from "./views/DailyTaskList/DailyTaskList";
 import DailyTaskItems from "./views/DailyTaskItems/DailyTaskItems";
 import Notes from "./components/Notes/Notes";
@@ -271,7 +271,13 @@ class App extends React.Component {
                 )
               }
             />
-            <Route exact path="/Home" component={Home} />
+            <Route
+              exact
+              path="/Home"
+              render={props => (
+                <Home isUserSignedIn={this.isUserSignedIn.bind(this)} />
+              )}
+            />
             <Route
               exact
               path="/signup"

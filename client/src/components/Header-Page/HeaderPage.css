@@ -1,32 +1,33 @@
 .Header-page {
   padding: 5px;
-  text-align: center;    
-  background: #ee8422;
+  text-align: center;
+  background: #f79a22;
+
   color: #ffffff;
   font-size: 30px;
 }
 
 .Header-logo {
-	width: 30px;
-	height: 30px;  
+  width: 30px;
+  height: 30px;
 }
 
 .Header-box {
-	display: flex;
-	flex-flow: row nowrap; 
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
 }
 
 .Margin-quad {
-	margin-right: 20px;
+  margin-right: 20px;
 }
 
 .Margin-single {
-	margin-right: 5px;
+  margin-right: 5px;
 }
 
 a.Is-disable {
-	cursor: not-allowed;
-	pointer-events: none;
+  cursor: not-allowed;
+  pointer-events: none;
 }
