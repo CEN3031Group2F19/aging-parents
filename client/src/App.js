@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect} from "react-router-dom";
 import Home from "./views/Home/Home";
 
 import DailyTaskList from "./views/DailyTaskList/DailyTaskList";
@@ -14,6 +14,8 @@ import EditAppointmentView from "./views/CalendarView/EditAppointmentView";
 import CalendarView from "./views/CalendarView/CalendarView";
 import CalendarDateView from "./views/CalendarView/CalendarDateView";
 import Timesheet from "./views/Timesheet/Timesheet";
+import TimesheetAdd from "./views/TimesheetAdd/TimesheetAdd";
+
 import NotFound from "./views/NotFound";
 import SignUp from "./views/SignUp/SignUp";
 import Header from "./components/Header/Header";
@@ -83,6 +85,39 @@ class App extends React.Component {
       });
     }
   };
+
+  //Timesheet pages subrouting
+  timesheetMain =() => {
+    return(
+      <div>
+        <Switch>
+          <Route
+            exact
+            path="/Timesheet"
+            render={props =>
+              this.isUserSignedIn() ? (
+                <Timesheet {...props} />
+              ) : (
+                <Redirect to="/Home" />
+              )
+            }
+          /> 
+          <Route
+              exact
+              path="/Timesheet/TimesheetAdd"
+              render={props =>
+                this.isUserSignedIn() ? (
+                  <TimesheetAdd {...props} />
+                ) : (
+                  <Redirect to="/Home" />
+                )
+              }
+            /> 
+            <Route component={NotFound} />      
+        </Switch>
+      </div>
+    );
+  }
 
   render() {
     return (
@@ -228,11 +263,10 @@ class App extends React.Component {
               }
             />
             <Route
-              exact
               path="/Timesheet"
               render={props =>
                 this.isUserSignedIn() ? (
-                  <Timesheet {...props} />
+                  <this.timesheetMain {...props} />
                 ) : (
                   <Redirect to="/Home" />
                 )
