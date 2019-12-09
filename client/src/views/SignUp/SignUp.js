@@ -1,5 +1,7 @@
 import React from "react";
 import { Form, Button, Grid, Segment } from "semantic-ui-react";
+import HeaderPage from "../../components/Header-Page/HeaderPage";
+
 const axios = require("axios");
 
 class SignUp extends React.Component {
@@ -33,7 +35,7 @@ class SignUp extends React.Component {
       <div className="signup">
         {" "}
         <div className="column">
-          <h1>Create an account</h1>
+          <HeaderPage title="Create an Account" />
           <Grid columns={1} relaxed="very" stackable>
             <Grid.Column>
               <Form>

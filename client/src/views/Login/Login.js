@@ -2,6 +2,8 @@ import React from "react";
 import { Form, Button, Grid, Divider, Segment } from "semantic-ui-react";
 import { Link, Redirect } from "react-router-dom";
 import "./Login.css";
+import HeaderPage from "../../components/Header-Page/HeaderPage";
+
 const axios = require("axios");
 
 class Login extends React.Component {
@@ -43,7 +45,7 @@ class Login extends React.Component {
   render() {
     return (
       <div className="login">
-        {this.renderRedirect()}{" "}
+        {this.renderRedirect()} <HeaderPage title="Log In" />
         <div className="column">
           <Segment placeholder>
             <Grid columns={2} relaxed="very" stackable>
