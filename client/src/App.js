@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
+import "./App.css";
 import Home from "./views/Home/Home";
-
 import DailyTaskList from "./views/DailyTaskList/DailyTaskList";
 import DailyTaskItems from "./views/DailyTaskItems/DailyTaskItems";
 import Notes from "./components/Notes/Notes";
@@ -122,11 +122,11 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Header
-          isUserSignedIn={this.isUserSignedIn.bind(this)}
-          logOut={this.logOut.bind(this)}
-        />
         <Container>
+          <Header
+            isUserSignedIn={this.isUserSignedIn.bind(this)}
+            logOut={this.logOut.bind(this)}
+          />
           <Switch>
             <Route
               exact

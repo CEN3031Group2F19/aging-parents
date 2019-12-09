@@ -1,21 +1,23 @@
 import React from "react";
-import Calendar from '../../components/Calendar/Calendar'
+import Calendar from "../../components/Calendar/Calendar";
+import cal from "../../assets/ICONS/ICON_CALENDAR.png";
+import HeaderPage from "../../components/Header-Page/HeaderPage";
 const axios = require("axios");
 
 class CalendarView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        year: props.year,
-        month: props.month,
-        day: props.day,
-        appointments: []
+      year: props.year,
+      month: props.month,
+      day: props.day,
+      appointments: []
     };
 
     this.populateAppointments();
   }
-  
-  appointmentParse = (obj) => {
+
+  appointmentParse = obj => {
     try {
       return {
         key: obj.key,
@@ -27,42 +29,44 @@ class CalendarView extends React.Component {
         startTime: obj.startTime,
         endTime: obj.endTime
       };
-    }
-    catch(error) {
+    } catch (error) {
       console.log(error);
       return {};
     }
-  }
+  };
 
   populateAppointments = async () => {
     const serverUri =
-        process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
-    
+      process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
+
     try {
-        const response = await axios.get(`${serverUri}/Calendar/api/Appointments`);
+      const response = await axios.get(
+        `${serverUri}/Calendar/api/Appointments`
+      );
 
-        var dbAppointments = [];
+      var dbAppointments = [];
 
-        response.data.forEach(el => {
-          dbAppointments.splice(0, 0, this.appointmentParse(el));
-        });
+      response.data.forEach(el => {
+        dbAppointments.splice(0, 0, this.appointmentParse(el));
+      });
 
-        this.setState({ appointments: [...dbAppointments] });
+      this.setState({ appointments: [...dbAppointments] });
     } catch (error) {
       console.log(error);
     }
-};
+  };
 
   render() {
     return (
-        <>
-            <Calendar 
-                year={this.state.year}
-                month={this.state.month}
-                day={this.state.day}
-                appointments={this.state.appointments}
-            />
-        </>
+      <>
+        <HeaderPage icon={cal} title="Calendar" />
+        <Calendar
+          year={this.state.year}
+          month={this.state.month}
+          day={this.state.day}
+          appointments={this.state.appointments}
+        />
+      </>
     );
   }
 }

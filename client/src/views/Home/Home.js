@@ -1,10 +1,12 @@
 import React from "react";
-import logo from "../../assets/logo.svg";
+import HeaderPage from "../../components/Header-Page/HeaderPage";
+import avatar from "../../assets/ICONS/ICON_AVATAR.png";
 import "./Home.css";
 
 function Home() {
   return (
     <div className="App">
+      <HeaderPage icon={avatar} title="Carekeeper" />
       {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
                 <p>
