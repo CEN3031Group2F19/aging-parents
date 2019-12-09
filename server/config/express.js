@@ -6,6 +6,9 @@ const path = require("path"),
   exampleRouter = require("../routes/examples.server.routes"),
   users = require("../routes/authentication.routes"),
   passport = require("passport"),
+  notes = require('../routes/notes.routes'),
+  appointments = require('../routes/appointment.routes'),
+  medications = require('../routes/medication.routes'),
   LocalStrategy = require("passport-local").Strategy,
   cors = require("cors");
 var Account = require("../models/account");
@@ -67,6 +70,9 @@ module.exports.init = () => {
   // add a router
   app.use("/api/example", exampleRouter);
   app.use("/", users);
+  app.use("/", notes);
+  app.use("/", appointments);
+  app.use("/", medications);
 
   if (process.env.NODE_ENV === "production") {
     // Serve any static files

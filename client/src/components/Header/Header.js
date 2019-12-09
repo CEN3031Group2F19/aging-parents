@@ -30,6 +30,15 @@ class Header extends React.Component {
         onClick={this.handleItemClick}
       />
     ) : null;
+    const calendar = signedIn ? (
+      <Menu.Item
+        as={Link}
+        to="/Calendar"
+        name="Calendar"
+        active={activeItem === "Calendar"}
+        onClick={this.handleItemClick}
+      />
+    ) : null;
     const dailyTasks = signedIn ? (
       <Menu.Item
         as={Link}
@@ -48,6 +57,15 @@ class Header extends React.Component {
         onClick={this.handleItemClick}
       />
     ) : null;
+    const medications = signedIn ? (
+      <Menu.Item
+        as={Link}
+        to="/Medications"
+        name="Medications"
+        active={activeItem === "Timesheet"}
+        onClick={this.handleItemClick}
+      />
+    ) : null;
     return (
       <div>
         <Menu pointing>
@@ -60,7 +78,9 @@ class Header extends React.Component {
           />
           {menuItems}
           {dailyTasks}
+          {calendar}
           {timeSheet}
+          {medications}
           <Menu.Menu position="right">{logInOrOut}</Menu.Menu>
         </Menu>
       </div>
