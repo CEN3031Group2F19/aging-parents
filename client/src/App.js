@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, Redirect} from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import Home from "./views/Home/Home";
 
 import DailyTaskList from "./views/DailyTaskList/DailyTaskList";
@@ -87,8 +87,8 @@ class App extends React.Component {
   };
 
   //Timesheet pages subrouting
-  timesheetMain =() => {
-    return(
+  timesheetMain = () => {
+    return (
       <div>
         <Switch>
           <Route
@@ -101,23 +101,23 @@ class App extends React.Component {
                 <Redirect to="/Home" />
               )
             }
-          /> 
+          />
           <Route
-              exact
-              path="/Timesheet/TimesheetAdd"
-              render={props =>
-                this.isUserSignedIn() ? (
-                  <TimesheetAdd {...props} />
-                ) : (
-                  <Redirect to="/Home" />
-                )
-              }
-            /> 
-            <Route component={NotFound} />      
+            exact
+            path="/Timesheet/TimesheetAdd"
+            render={props =>
+              this.isUserSignedIn() ? (
+                <TimesheetAdd {...props} />
+              ) : (
+                <Redirect to="/Home" />
+              )
+            }
+          />
+          <Route component={NotFound} />
         </Switch>
       </div>
     );
-  }
+  };
 
   render() {
     return (
@@ -135,6 +135,7 @@ class App extends React.Component {
                 <Login
                   {...props}
                   authenticateUser={this.authenticateUser.bind(this)}
+                  isUserSignedIn={this.isUserSignedIn.bind(this)}
                 />
               )}
             />
@@ -252,11 +253,9 @@ class App extends React.Component {
             <Route
               exact
               path="/Calendar/Appointment/Edit/:key"
-              render={props =>                
+              render={props =>
                 this.isUserSignedIn() ? (
-                  <EditAppointmentView
-                    {...props.match}
-                  />
+                  <EditAppointmentView {...props.match} />
                 ) : (
                   <Redirect to="/Calendar" />
                 )
