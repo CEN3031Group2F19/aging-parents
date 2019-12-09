@@ -1,3 +1,40 @@
 body {
   background-color: #f79a22 !important;
 }
+.ui.primary.button {
+  background-color: #a1bb3e !important;
+}
+
+.ui.pointing.menu {
+  background-color: #ee8422 !important;
+}
+
+.ui.menu .item {
+  color: #fff !important;
+}
+
+.ui.menu {
+  border: none !important;
+}
+
+.ui.menu .item:before {
+  background: #eaeaea !important;
+}
+.ui.menu .item:after {
+  background: #ee8422 !important;
+  border-bottom: none !important;
+  border-right: none !important;
+}
+/* .ui.menu .active.item:after {
+  background: rgba(0, 0, 0, 0.05) !important;
+} */
+
+label,
+h3,
+h4 {
+  color: #fff !important;
+}
+
+.ui.form .field > label {
+  color: black !important;
+}

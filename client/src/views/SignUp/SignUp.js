@@ -1,6 +1,5 @@
 import React from "react";
 import { Form, Button, Grid, Segment } from "semantic-ui-react";
-//import { Link } from "react-router-dom";
 const axios = require("axios");
 
 class SignUp extends React.Component {

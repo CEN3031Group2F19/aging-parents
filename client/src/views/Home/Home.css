@@ -23,3 +23,13 @@
 .App body {
   background: #a1bbe3 !important;
 }
+.ui.labeled.icon.button {
+  background: #ee8422 !important;
+  color: #fff;
+  min-width: 200px;
+  margin: 5px 0px 5px 0px !important;
+  text-align: left;
+}
+.ui.labeled.icon.button > .icon {
+  background-color: rgba(0, 0, 0, 0) !important;
+}

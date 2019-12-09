@@ -122,11 +122,11 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        <Header
+          isUserSignedIn={this.isUserSignedIn.bind(this)}
+          logOut={this.logOut.bind(this)}
+        />
         <Container>
-          <Header
-            isUserSignedIn={this.isUserSignedIn.bind(this)}
-            logOut={this.logOut.bind(this)}
-          />
           <Switch>
             <Route
               exact
@@ -271,7 +271,13 @@ class App extends React.Component {
                 )
               }
             />
-            <Route exact path="/Home" component={Home} />
+            <Route
+              exact
+              path="/Home"
+              render={props => (
+                <Home isUserSignedIn={this.isUserSignedIn.bind(this)} />
+              )}
+            />
             <Route
               exact
               path="/signup"

@@ -58,7 +58,7 @@ class CalendarView extends React.Component {
 
   render() {
     return (
-      <>
+      <div className="Calendar">
         <HeaderPage icon={cal} title="Calendar" />
         <Calendar
           year={this.state.year}
@@ -66,7 +66,7 @@ class CalendarView extends React.Component {
           day={this.state.day}
           appointments={this.state.appointments}
         />
-      </>
+      </div>
     );
   }
 }

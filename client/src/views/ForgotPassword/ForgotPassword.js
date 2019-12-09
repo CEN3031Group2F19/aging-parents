@@ -1,6 +1,7 @@
 import React from "react";
 import { Form, Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import HeaderPage from "../../components/Header-Page/HeaderPage";
 const axios = require("axios");
 
 class ForgotPassword extends React.Component {
@@ -62,7 +63,7 @@ class ForgotPassword extends React.Component {
     const { email, messageFromServer, showNullError, showError } = this.state;
     return (
       <div className="forgotpassword">
-        <h1>Forgot Password</h1>
+        <HeaderPage title="Forgot Password" />
         <Form>
           {/* <Form.Group widths="equal"> */}
           <Form.Input
