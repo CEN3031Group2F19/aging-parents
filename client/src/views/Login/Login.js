@@ -1,7 +1,9 @@
 import React from "react";
 import { Form, Button, Grid, Divider, Segment } from "semantic-ui-react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import "./Login.css";
+import HeaderPage from "../../components/Header-Page/HeaderPage";
+
 const axios = require("axios");
 
 class Login extends React.Component {
@@ -9,7 +11,8 @@ class Login extends React.Component {
     super(props);
     this.state = {
       username: "",
-      password: ""
+      password: "",
+      redirect: false
     };
   }
   handleSubmit = e => {
@@ -25,14 +28,24 @@ class Login extends React.Component {
         password: this.state.password
       });
       this.props.authenticateUser(response.data.token);
+      if (this.props.isUserSignedIn()) {
+        this.setState({ redirect: true });
+      }
     } catch (error) {
       console.error(error);
     }
   }
+
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/home" />;
+    }
+  };
+
   render() {
     return (
       <div className="login">
-        {" "}
+        {this.renderRedirect()} <HeaderPage title="Log In" />
         <div className="column">
           <Segment placeholder>
             <Grid columns={2} relaxed="very" stackable>

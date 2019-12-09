@@ -1,65 +1,61 @@
 //Creates a list of timecard in a table. Placement of Add Timecard button and pagination
 import React from 'react'
-import { Icon, Menu, Table, Button } from 'semantic-ui-react'
+import './Form-Orange/FormOrange.css';
 
 class Timecards extends React.Component {	
 	render() {
 		const {TimecardData} = this.props;
 		const timecardEntries = TimecardData.map(entry => {
-			const full_name = entry.first_name + '\xa0'  + entry.last_name;
+			const full_name = entry.first_name + " " + entry.last_name;
 			return (
-				<Table.Row key= {entry.id}>
-			        <Table.Cell>{entry.date_in}</Table.Cell>
-			        <Table.Cell>{entry.time_in}</Table.Cell>
-			        <Table.Cell>{entry.date_out}</Table.Cell>
-			        <Table.Cell>{entry.time_out}</Table.Cell>
-			        <Table.Cell>{full_name}</Table.Cell>
-			        <Table.Cell>{entry.hours_worked}</Table.Cell>
-				</Table.Row>
+				<tr key= {entry.id}>
+			        <td>{entry.date_in}</td>
+			        <td>{entry.time_in}</td>
+			        <td>{entry.time_out}</td>
+			        <td>{full_name}</td>
+				</tr>
 			)
-		})
+		});
+
+		const totalHours = TimecardData.reduce((sum, timecard)=> {
+			let [timeIn, period] = timecard.time_in.split(" ");
+				timeIn = (period === "PM")? (parseInt(timeIn) + 12) : parseInt(timeIn);
+			let [timeOut, period2] = timecard.time_out.split(" ");
+				timeOut = (period2 === "PM")? (parseInt(timeOut) + 12) : parseInt(timeOut);
+			let hours = (timeOut > timeIn)? (timeOut - timeIn) : ((24 + timeOut) - timeIn);
+			return(
+				sum + hours
+			)
+		}, 0);
+
 	
 		return (
-			<div>
-				<Table celled>
-				    <Table.Header>
-				      <Table.Row textAlign = 'center'>
-				        <Table.HeaderCell>Start Date</Table.HeaderCell>
-				        <Table.HeaderCell>Start Time</Table.HeaderCell>
-				        <Table.HeaderCell>End Date</Table.HeaderCell>
-				        <Table.HeaderCell>End Time</Table.HeaderCell>
-				        <Table.HeaderCell>Caretaker</Table.HeaderCell>
-				        <Table.HeaderCell>Hours Worked</Table.HeaderCell>
-				      </Table.Row>
-				    </Table.Header>
+			<div className="flex-container-horizontal ">
+				<table className="stripedTable flex-items-wholeWidth">
+				    <thead className="background-AppGreen">
+				      <tr className="text-white-bold">
+				        <th>Date</th>
+				        <th>Time In</th>
+				        <th>Time Out</th>
+				        <th>Caretaker</th>
+				      </tr>
+				    </thead>
 
-				    <Table.Body>
+				    <tbody>
 				      {timecardEntries}
-				    </Table.Body>
+				    </tbody>
 
-				    <Table.Footer>
-						<Table.Row>												
-							<Table.HeaderCell colSpan='6'>											        	
-								<Button floated='left' color="blue" size="small">
-									Add Timecard
-								</Button>
-													        	
-								<Menu floated='right' pagination>
-									<Menu.Item as='a' icon>
-										<Icon name='chevron left' />
-									</Menu.Item>
-									<Menu.Item as='a'>1</Menu.Item>
-									<Menu.Item as='a'>2</Menu.Item>
-									<Menu.Item as='a'>3</Menu.Item>
-									<Menu.Item as='a'>4</Menu.Item>
-									<Menu.Item as='a' icon>
-										<Icon name='chevron right' />
-									</Menu.Item>
-								</Menu>
-							</Table.HeaderCell>
-						</Table.Row>
-				    </Table.Footer>
-				</Table>
+				    <tfoot className="background-AppOrange section-padding text-white-bold">
+						<tr>												
+							<td colSpan='4'>
+							<div className="flex-container-horizontal">
+								<span style={{marginRight: "10px"}}>Total Hours: </span>
+								<input type="text" name="totalHours" value={totalHours} size="4" style={{textAlign: "center"}} disabled/>	
+							</div>				
+							</td>
+						</tr>
+				    </tfoot>
+				</table>
 			</div>
 		);
 	}

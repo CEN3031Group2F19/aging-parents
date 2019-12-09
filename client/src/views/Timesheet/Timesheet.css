@@ -1,0 +1,76 @@
+.flex-container-vertical {
+  display: flex;
+  flex-flow: column nowrap;  
+}
+
+.flex-container-horizontal {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+.background-AppOrange {
+ background-color: #f79a22;
+}
+
+.section-padding {
+  padding: 7px
+}
+
+.text-white-bold {
+  text-align: center;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+label.labelpadded {
+    display: block; /* add this */
+    padding-right: 20px;
+    text-align: left;
+}
+
+.background-AppDarkGrey {
+  background-color: #606161;
+}
+
+.section-whole-page {
+  display: inline-block;
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-position: left 11%;
+  background-size: contain;
+  background-attachment: scroll;
+}
+
+.flex-self-start{
+  align-self: flex-start;
+}
+
+.flex-container-align-start {
+  align-items: flex-start;
+  align-content: flex-start;
+  justify-content: center;
+}
+
+.flex-container-justify-center {
+  justify-content: center;
+}
+
+.background-AppWhite {
+  background-color: #ffffff;
+}
+
+input[type="submit"].form-small-button , button.form-small-button {
+  background: url("../../assets/BUTTON_ADD.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  width: 100px;
+  height: 40px;
+  text-indent: -9999px;
+  display: inline-block;
+  cursor: pointer;  
+  border-radius: 5em;
+  border:none;
+}
