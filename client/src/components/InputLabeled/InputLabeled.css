@@ -1,0 +1,54 @@
+.flex-container-horizontal {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.Table
+    {
+        display: table;
+    }
+
+.Title
+{
+    display: table-caption;
+    text-align: center;
+    font-weight: bold;
+    font-size: larger;
+}
+
+.Heading
+{
+    display: table-row;
+    font-weight: bold;
+    text-align: center;
+}
+
+.Body
+{
+    display: table-row-group;
+
+}
+
+.Row
+{
+    display: table-row;
+}
+
+.Cell
+{
+    display: table-cell;
+    padding: 5px;
+}
+
+.Foot
+{
+    display: table-footer-group;
+    width: 100%;
+
+}
+
+.cell-whole-width {
+  width: 100%;
+}
