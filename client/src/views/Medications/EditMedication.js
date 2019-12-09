@@ -100,7 +100,7 @@ class EditMedication extends React.Component {
             this.postRequest('/Medications/api/Delete',
             { key: this.state.key });
 
-        this.getMedication();
+            this.getMedication();
         } 
     }
 

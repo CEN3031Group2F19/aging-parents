@@ -15,7 +15,13 @@ class CalendarWeek extends React.Component {
         return(
             <tr>
                 {Array.from(Array(7), (e, i) => { 
-                    return <CalendarDay year={this.props.year} month={this.props.month} selectedDay={this.props.day} day={sunday + i} appointments={this.props.appointments} />
+                    return <CalendarDay 
+                        year={this.props.year} 
+                        month={this.props.month} 
+                        selectedDay={this.props.day} 
+                        day={sunday + i} 
+                        appointments={this.props.appointments} 
+                        />
                 })}
             </tr>
         );

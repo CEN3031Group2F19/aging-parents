@@ -5,6 +5,7 @@ var mongodb = require('mongodb');
 
 // Add a new appointment
 router.post("/Calendar/api/Add", function(req, res) {
+  
   var appointment = new Appointment({
     key: new mongodb.ObjectID(),
     title: req.body.title,
@@ -53,6 +54,15 @@ router.get("/Calendar/api/Appointments", function(req, res) {
   Appointment.find({}, function(err, results) {
     if (err) console.log(err);
     res.send(results);
+  });
+});
+
+// Get one appointment by key
+router.get("/Calendar/api/Appointments/:key", function(req, res) {
+  Appointment.findOne({ key: new mongodb.ObjectID(req.params.key) }, 
+    function(err, results) {
+      if (err) console.log(err);
+      res.send(results);
   });
 });
 

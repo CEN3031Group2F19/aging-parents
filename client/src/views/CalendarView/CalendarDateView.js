@@ -1,6 +1,7 @@
 import React from "react";
 import CalendarDate from '../../components/Calendar/CalendarDate';
 import { Button } from 'semantic-ui-react';
+const axios = require("axios");
 
 class CalendarDateView extends React.Component {
   constructor(props) {
@@ -27,9 +28,50 @@ class CalendarDateView extends React.Component {
     this.state = {
         year: yearParam,
         month: monthParam,
-        day: dayParam
+        day: dayParam,
+        appointments: []
     };
+
+    this.populateAppointments();
   }
+
+  appointmentParse = (obj) => {
+    try {
+      return {
+        key: obj.key,
+        title: obj.title,
+        notes: obj.notes,
+        reminderMinutes: obj.reminderMinutes,
+        location: obj.location,
+        userEmail: obj.userEmail,
+        startTime: obj.startTime,
+        endTime: obj.endTime
+      };
+    }
+    catch(error) {
+      console.log(error);
+      return {};
+    }
+  }
+
+  populateAppointments = async () => {
+    const serverUri =
+        process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
+    
+    try {
+        const response = await axios.get(`${serverUri}/Calendar/api/Appointments`);
+
+        var dbAppointments = [];
+
+        response.data.forEach(el => {
+          dbAppointments.splice(0, 0, this.appointmentParse(el));
+        });
+
+        this.setState({ appointments: [...dbAppointments] });
+    } catch (error) {
+      console.log(error);
+    }
+};
 
   nextDay = () => {
     var nextDate = new Date(this.state.year, this.state.month, this.state.day);
@@ -62,6 +104,7 @@ class CalendarDateView extends React.Component {
                 day={Number(this.state.day)}
                 onNext={this.nextDay}
                 onPrev={this.prevDay}
+                appointments={this.state.appointments}
             />
             <Button 
               href={'/Calendar/Appointment/'+ this.state.year + '/' + (Number(this.state.month) + 1) + '/' + this.state.day}

@@ -15,10 +15,18 @@ class CalendarDay extends React.Component {
 
     render() {
         const totalDays = new Date(this.props.year, this.props.month, 0).getDate();
-
-        const curDate = new Date(this.props.year, this.props.month - 1, this.props.day).getTime(); 
         var backColor = this.props.selectedDay === this.props.day ? '#afafaf' : '#fff';
-        var fontColor = this.props.appointments.includes(curDate) ? 'Green' : '';
+
+        var matchingAppointmnts = this.props.appointments.find( el => {
+            var date = new Date(el.startTime);
+            if (date.getFullYear() === this.props.year
+                && date.getMonth() + 1 === this.props.month
+                && date.getDate() === this.props.day) {
+                return el;
+            }
+        });
+
+        var fontColor = matchingAppointmnts === undefined ? '' : 'Green';
 
         return(
             <td 

@@ -62,7 +62,7 @@ class Calendar extends React.Component {
                     year={this.state.year}
                     month={this.state.month + 1}
                     day={this.state.day}
-                    appointments={this.state.appointments}
+                    appointments={this.props.appointments}
                 />
                 </tbody>
             </table>

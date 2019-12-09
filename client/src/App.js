@@ -9,7 +9,8 @@ import Notes from "./components/Notes/Notes";
 import EditMedication from "./views/Medications/EditMedication";
 import NewMedication from "./views/Medications/NewMedication";
 import Medications from "./views/Medications/Medications";
-import AppointmentView from "./views/CalendarView/AppointmentView";
+import NewAppointmentView from "./views/CalendarView/NewAppointmentView";
+import EditAppointmentView from "./views/CalendarView/EditAppointmentView";
 import CalendarView from "./views/CalendarView/CalendarView";
 import CalendarDateView from "./views/CalendarView/CalendarDateView";
 import Timesheet from "./views/Timesheet/Timesheet";
@@ -203,10 +204,23 @@ class App extends React.Component {
               path="/Calendar/Appointment/:year/:month/:day"
               render={props =>
                 this.isUserSignedIn() ? (
-                  <AppointmentView
+                  <NewAppointmentView
                     year={props.match.params.year}
                     day={props.match.params.day}
                     month={props.match.params.month - 1}
+                  />
+                ) : (
+                  <Redirect to="/Calendar" />
+                )
+              }
+            />
+            <Route
+              exact
+              path="/Calendar/Appointment/Edit/:key"
+              render={props =>                
+                this.isUserSignedIn() ? (
+                  <EditAppointmentView
+                    {...props.match}
                   />
                 ) : (
                   <Redirect to="/Calendar" />
