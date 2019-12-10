@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import { Button, Header, Grid, Container, Image, Modal, Segment, Checkbox } from 'semantic-ui-react';
+import './DailyTasksItems.css'
 
 class DailyTaskItems extends Component {
   createTasks = item => {
 
     return (
       <Grid container style={{ padding: '0em 0em' }}>
-        <Grid.Row>
-          <p key={item.key} onClick={() => this.props.deleteItem(item.key)}>
+        <Grid.Row >
+          <p className="deleteNotification" key={item.key} onClick={
+            () => this.props.deleteItem(item.key)}>
             {item.text}
-          </p><Checkbox />
+          </p>
+          <Checkbox />
           <Container textAlign='right'></Container>
         </Grid.Row>
       </Grid>
