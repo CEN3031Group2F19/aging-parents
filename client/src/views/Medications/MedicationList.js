@@ -1,6 +1,6 @@
 import React from 'react';
 import './Medications.css';
-import { Table, TableBody, TableRow, Form, Button, TextArea, Input, Dropdown } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 
 class MedicationList extends React.Component {
     constructor(props) {
@@ -10,24 +10,25 @@ class MedicationList extends React.Component {
         };
     }
     render() {
+
         return (
-            <Table>
-                <TableBody>
+            <table style={{width: '100%'}}>
+                <tbody>
                     {this.props.medications.map(item => 
                         <a href={'/Medications/Edit/' + item.key.toString()}>
-                            <TableRow
+                            <tr
                                 style={(this.props.medications.indexOf(item) % 2 == 0) ? 
-                                    {backgroundColor: '#e2e2e2', color: '#000'} 
-                                    : {backgroundColor: '#fff', color: '#000'}}
-                            >{item.title}</TableRow>
+                                    {backgroundColor: '#e2e2e2', color: '#000', display: 'block', padding: '10px'} 
+                                    : {backgroundColor: '#fff', color: '#000', display: 'block', padding: '10px'}}
+                            >{item.title}</tr>
                         </a>
                     )}
-                </TableBody>
+                </tbody>
                 <Button
                     style={{width: '100%'}}
                     href='/Medications/New'
                 >New Medication</Button>
-            </Table>
+            </table>
         );
     }
 }

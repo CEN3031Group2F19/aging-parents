@@ -9,6 +9,7 @@ const path = require("path"),
   notes = require('../routes/notes.routes'),
   appointments = require('../routes/appointment.routes'),
   shifts = require('../routes/shift.routes'),
+  tasks = require('../routes/task.routes'),
   medications = require('../routes/medication.routes'),
   LocalStrategy = require("passport-local").Strategy,
   cors = require("cors");
@@ -75,6 +76,7 @@ module.exports.init = () => {
   app.use("/", appointments);
   app.use("/", medications);
   app.use("/", shifts);
+  app.use("/", tasks);
 
   if (process.env.NODE_ENV === "production") {
     // Serve any static files

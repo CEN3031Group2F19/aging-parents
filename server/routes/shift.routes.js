@@ -5,11 +5,11 @@ var mongodb = require('mongodb');
 
 // Add a new shift
 router.post("/Timesheet/api/Add", function(req, res) {
-  var shift = new Medication({
+  var shift = new Shift({
     key: new mongodb.ObjectID(),
     userEmail: req.body.userEmail,
     timeIn: req.body.timeIn,
-    timeIn: req.body.timeOut
+    timeOut: req.body.timeOut
   });
   shift.save( function(err, shift) {
     if (err) 
@@ -24,7 +24,7 @@ router.post("/Timesheet/api/Update", function(req, res) {
     { $set: {
       userEmail: req.body.userEmail,
       timeIn: req.body.timeIn,
-      timeIn: req.body.timeOut
+      timeOut: req.body.timeOut
     } },
     function(err, results) {
       if (err) console.log(err);
@@ -52,7 +52,7 @@ router.get("/Timesheet/api/Shifts", function(req, res) {
 
 // Get one shift by key
 router.get("/Timesheet/api/Shifts/:key", function(req, res) {
-  Shift.findOne({ key: new mongoldb.ObjectID(req.params.key) }, 
+  Shift.findOne({ key: req.params.key },
     function(err, results) {
       if (err) console.log(err);
       res.send(results);
