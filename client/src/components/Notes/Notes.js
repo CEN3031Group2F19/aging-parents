@@ -1,7 +1,7 @@
 import React from "react";
 import "./Notes.css";
 import config from "./config";
-import { Form, Button, TextArea, Input, Dropdown } from "semantic-ui-react";
+import { Confirm, Form, Button, TextArea, Input, Dropdown } from "semantic-ui-react";
 import notes from "../../assets/ICONS/ICON_NOTES.png";
 import HeaderPage from "../../components/Header-Page/HeaderPage";
 
@@ -20,7 +20,8 @@ class Notes extends React.Component {
       text: "",
       notes: [],
       updateButtonText: "Add",
-      deleteBtnDisplay: { display: "none" }
+      deleteBtnDisplay: { display: "none" },
+      open: false,
     };
     this.populateNotes();
   }
@@ -98,27 +99,30 @@ class Notes extends React.Component {
         }
   };
 
-  NotesBtn_Click = async (e, sender) => {
+  AddUpdateBtn_Click = async () => {
     const serverUri =
       process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
 
-    if (e.target.innerText === "Add") {
+    if (this.state.updateButtonText === "Add") {
       this.postRequest("/Notes/api/Add", {
         title: this.state.title,
         text: this.state.text
       });
       this.newNoteState();
-    } else if (e.target.innerText === "Update") {
+    } else if (this.state.updateButtonText === "Update") {
       this.postRequest("/Notes/api/Update", {
         key: this.state.value,
         title: this.state.title,
         text: this.state.text
       });
-    } else if (e.target.innerText === "Delete") {
-      this.postRequest("/Notes/api/Delete", { key: this.state.value });
-      this.newNoteState();
     }
   };
+
+  DeleteBtn_Click = async () => {
+    this.postRequest("/Notes/api/Delete", { key: this.state.value });
+    this.newNoteState();
+    this.setState({open: false});
+  }
 
   render() {
     return (
@@ -148,15 +152,20 @@ class Notes extends React.Component {
             value={this.state.text}
             maxLength={config.NoteMaxLength}
           />
-          <Button onClick={this.NotesBtn_Click}>
+          <Button onClick={this.AddUpdateBtn_Click}>
             {this.state.updateButtonText}
           </Button>
           <Button
-            onClick={this.NotesBtn_Click}
+            onClick={() => this.setState({open: true})}
             style={this.state.deleteBtnDisplay}
           >
             Delete
           </Button>
+          <Confirm 
+            open={this.state.open}
+            onCancel={() => this.setState({ open: false })}
+            onConfirm={this.DeleteBtn_Click}
+          />
         </Form>
       </div>
     );
