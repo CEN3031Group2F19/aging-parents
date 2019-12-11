@@ -42,10 +42,8 @@ class CalendarDateView extends React.Component {
                     if (date.getFullYear() === Number(this.props.year)
                         && date.getMonth() === Number(this.props.month)
                         && date.getDate() === Number(this.props.day)) {
-                        return <tr style={(this.props.appointments.indexOf(appt) % 2 === 0) ? 
-                            {backgroundColor: '#e2e2e2'}
-                        : {}}>
-                            <td colSpan={3}><a href={`/Calendar/Appointment/Edit/${appt.key}`}><Label style={{width: '100%', fontSize: '100%', textAlign:'center'}}>{appt.title}</Label></a></td>
+                        return <tr style={{backgroundColor: '#ee8422', color: '#fff'}}>
+                            <td colSpan={3}><a href={`/Calendar/Appointment/Edit/${appt.key}`}><Label style={{width: '100%', fontSize: '100%', textAlign:'center', backgroundColor: '#ee8422', color: '#fff'}}>{appt.title}</Label></a></td>
                             <td colSpan={2}>{startTime}</td>
                             <td colSpan={2}>{endTime}</td>
                         </tr>

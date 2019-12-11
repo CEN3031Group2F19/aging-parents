@@ -6,7 +6,7 @@ var Shift = new Schema({
   key: { type: ObjectId, unique: true, required: true },
   userEmail: { type: String, required: true },
   timeIn: { type: Date, required: true },
-  timeIn: { type: Date, required: false, default: null },
+  timeOut: { type: Date, required: false, default: null },
 });
 
 Shift.pre('save', function(next) {

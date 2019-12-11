@@ -156,7 +156,7 @@ class EditAppointment extends React.Component {
                     <td><Dropdown 
                         
                         text={this.state.hour}
-                        style={{ width: '100%' }}
+                        style={{ width: '100%', backgroundColor: '#fff', borderRadius: '5px', padding: '5px' }}
                         options={enums.hours.map(h =>
                             obj(enums.hours.indexOf(h), h, h)    
                         )}                                
@@ -166,7 +166,7 @@ class EditAppointment extends React.Component {
                     <td><Dropdown
                         scrolling 
                         text={this.state.minute}
-                        style={{ width: '100%' }} 
+                        style={{ width: '100%', backgroundColor: '#fff', borderRadius: '5px', padding: '5px' }} 
                         options={enums.minutes.map(m => 
                             obj(enums.minutes.indexOf(m), m, m)
                         )}                                
@@ -176,7 +176,7 @@ class EditAppointment extends React.Component {
                     <td><Dropdown  
                         scrolling
                         text={this.state.amPm}
-                        style={{ width: '100%' }} 
+                        style={{ width: '100%', backgroundColor: '#fff', borderRadius: '5px', padding: '5px' }} 
                         options={[{ key: 0, text: 'AM', value: 0 },
                                 { key: 1, text: 'PM', value: 1 }]}                                
                         onChange={(event) => this.setState(
@@ -190,6 +190,7 @@ class EditAppointment extends React.Component {
                             onChange={(event) => this.setState(
                                 { notes: event.target.value })}
                             value={this.state.notes}
+                            style={{ resize: "none" }}
                     /></td>
                 </tr>
                 <tr>
