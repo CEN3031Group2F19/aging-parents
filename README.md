@@ -101,70 +101,70 @@ Remember to push your branches to the remote repository often (every time you wo
 
 Once work on a branch is complete, create a [pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request). Assign it to Regan (oreganoregano). Usually the base repository you'll be using is `develop`
 
-### Deployed Project
+## Deployed Project
 
 The deployed project can be found at [this link](https://github.com/CEN3031Group2F19/aging-parents).
 
-### APIs Used
+## APIs Used
 
-## Passport
+### Passport
 
 Passport is an authentication module perfect for Node.js. We used it to store salted and hashed passwords in our database rather than plaintext passwords. Passport was our all-around password middleware, taking the complicated hash functions out of our equation. [More here](http://www.passportjs.org/).
 
-## JSON Web Token
+### JSON Web Token
 
 JWT is a module that allowed us to store a token representing a user authentication. The token was used on the front end to limit access to pages to logged in users. In the future, it can be used to verify the identity of a user when making requests to the back end. [More here](https://jwt.io/).
 
-## Nodemailer
+### Nodemailer
 
 We used Nodemailer alongside Passport to send emails to users who forgot their passwords. It requries the use of an outside email provider, like Gmail, to actually send the mail. The account credentials need to be provided in `server/config/config.js` as `gmail.email` and `gmail.password`. [More here](https://nodemailer.com/about/).
 
-## Semantic UI
+### Semantic UI
 
 This User Interface framework is a fantastic way to easily build intuitive UI. We used the framework throughout the front end to build out buttons, text boxes, forms, and other elements. [More here](https://react.semantic-ui.com/).
 
-## Axios
+### Axios
 
 Axios is a popular HTTP client used to make requests. We used it in our React app to make requests to our Node back end.
 
-### Project Features
+## Project Features
 
-## Home page
+### Home page
 
 ![Home page](./public/home.png?raw=true "Home")
 This is the home page with links to all the other features.
 
-## Notes
+### Notes
 
 ![Notes Page](./public/notes.png?raw=true "Notes")
 Users can add, delete, and view notes here.
 
-## Daily Tasks
+### Daily Tasks
 
 ![Daily Tasks Page](./public/dailytasks.png?raw=true "Daily Tasks")
 Users can add, complete, delete, and view daily tasks here.
 
-## Calendar
+### Calendar
 
 ![Calendar Page](./public/calendar.png?raw=true "Calendar")
 Users can add, delete, and view appointments or events on the calendar.
 
-## Timesheet
+### Timesheet
 
 ![Timesheet Page](./public/timesheet.png?raw=true "Timesheet")
 Users clock in and out here. Users can also see the time cards of other workers and filter the view. This page has an open issue because it does not work as intended.
 
-## Medication
+### Medication
 
 ![Medication Page](./public/medications.png?raw=true "Medication")
 Users can add medications and view all medications here.
 
-### Run the project
+## Run the project
 
-## Locally
+### Locally
 
 Clone the repository and add `server/config/config.js` to the project folder. You should have values for `db.uri` (your URI for MongoDB Atlas), `gmail.email` (your email username for sending forgotten passwords), and `gmail.password`. Then, in a terminal run `npm run client && npm run server`
 
-## Heroku
+### Heroku
 
 Follow the steps described above to deploy to Heroku, then define the following variables in the Heroku settings for the app: `SERVER_URI` (https://aging-parent-care.herokuapp.com/), `DB_URI`, `RECOVERY_EMAIL`, and `RECOVERY_PASSWORD`.
