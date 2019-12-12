@@ -40,4 +40,13 @@ router.get("/Notes/api/Notes", function(req, res) {
   });
 });
 
+// Get one note by key
+router.get("/Notes/api/Notes/:key", function(req, res) {
+  Note.findOne({ key: req.params.key },
+    function(err, results) {
+      if (err) console.log(err);
+      res.send(results);
+  });
+});
+
 module.exports = router;

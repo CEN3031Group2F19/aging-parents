@@ -1,6 +1,6 @@
 import React from "react";
 import { Redirect } from 'react-router-dom';
-import { Dropdown, Label, Input, TextArea, Button } from 'semantic-ui-react';
+import { Confirm, Dropdown, Label, Input, TextArea, Button } from 'semantic-ui-react';
 const enums = require('./CalendarEnums');
 const axios = require("axios");
 
@@ -21,7 +21,8 @@ class EditAppointment extends React.Component {
             hour: '12',
             minute: '00',
             amPm: 'AM',
-            notes: ''
+            notes: '',
+            open: false
         }
 
         this.getAppointment(props.renderProps.params.key);
@@ -111,11 +112,14 @@ class EditAppointment extends React.Component {
         } catch (error) {
             console.log(error);
         } 
+
+        this.setState({open: false});
     }
 
     render() {
         return(
             (this.state.key !== null) ?
+            <>
             <table style={{ width: '100%', justifyContent: 'center', alignItems: 'center', textAlign: 'center', tableLayout: 'fixed'}}>
                 <tbody>
                 <tr>
@@ -195,10 +199,16 @@ class EditAppointment extends React.Component {
                 </tr>
                 <tr>
                     <td colSpan={2}><Button style={{ width: '100%' }} onClick={this.UpdateButton_Click}>Save</Button></td>
-                    <td colSpan={2}><Button style={{ width: '100%' }} onClick={this.DeleteButton_Click}>Delete</Button></td>
+                    <td colSpan={2}><Button style={{ width: '100%' }} onClick={() => {this.setState({open: true})}}>Delete</Button></td>
                 </tr>
                 </tbody>
-            </table> : 
+            </table>
+            <Confirm 
+                open={this.state.open}
+                onCancel={() => {this.setState({ open: false })}}
+                onConfirm={this.DeleteButton_Click}
+            />
+            </> : 
             <Redirect to="/Calendar" />
         );
     }

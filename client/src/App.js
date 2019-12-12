@@ -2,8 +2,7 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import "./App.css";
 import Home from "./views/Home/Home";
-import DailyTaskList from "./views/DailyTaskList/DailyTaskList";
-import DailyTaskItems from "./views/DailyTaskItems/DailyTaskItems";
+import DailyTaskView from "./views/DailyTasks/DailyTaskView/DailyTaskView";
 import Notes from "./components/Notes/Notes";
 
 import EditMedication from "./views/Medications/EditMedication";
@@ -25,17 +24,11 @@ import ResetPassword from "./views/ResetPassword/ResetPassword";
 import { Container } from "semantic-ui-react";
 
 class App extends React.Component {
-  inputElement = React.createRef();
   constructor(props) {
     super(props);
     const token = localStorage.getItem("token");
     this.state = {
-      token,
-      items: [],
-      currentItem: {
-        text: "",
-        key: ""
-      }
+      token
     };
   }
 
@@ -52,39 +45,6 @@ class App extends React.Component {
     localStorage.removeItem("token");
     this.setState({ token: null });
   }
-
-  // Daily tasks functionality:
-
-  // delete task
-  deleteItem = key => {
-    const filteredItems = this.state.items.filter(item => {
-      return item.key !== key;
-    });
-    this.setState({
-      items: filteredItems
-    });
-  };
-
-  handleInput = e => {
-    const itemText = e.target.value;
-    const currentItem = { text: itemText, key: Date.now() };
-    this.setState({
-      currentItem
-    });
-  };
-
-  //Add task
-  addItem = e => {
-    e.preventDefault();
-    const newItem = this.state.currentItem;
-    if (newItem.text !== "") {
-      const items = [...this.state.items, newItem];
-      this.setState({
-        items: items,
-        currentItem: { text: "", key: "" }
-      });
-    }
-  };
 
   //Timesheet pages subrouting
   timesheetMain = () => {
@@ -190,18 +150,7 @@ class App extends React.Component {
               path="/DailyTasks"
               render={props =>
                 this.isUserSignedIn() ? (
-                  [
-                    <DailyTaskList
-                      addItem={this.addItem}
-                      inputElement={this.inputElement}
-                      handleInput={this.handleInput}
-                      currentItem={this.state.currentItem}
-                    />,
-                    <DailyTaskItems
-                      entries={this.state.items}
-                      deleteItem={this.deleteItem}
-                    />
-                  ]
+                  <DailyTaskView />
                 ) : (
                   <Redirect to="/Home" />
                 )
