@@ -1,18 +1,23 @@
 import React from 'react'
 import { Input } from 'semantic-ui-react'
-import Caretakers from '../../components/Caretakers'
 
 class InputCaretakerDatalist extends React.Component {
 	render() {
-		const caretakerList = Caretakers.map(caretaker =>{
+		const caretakerList = this.props.caretakers.map(caretaker =>{
 			return(
-				<option key={caretaker.id} value ={caretaker.first_name + " " + caretaker.last_name} />
+				<option id={caretaker.key} value={caretaker.userEmail} />
 			);
 		});
 
 	  	return(
 			<div>
-				<Input list='caretakerList' placeholder='Select caretaker...' size="mini" onChange={this.props.onChange}/>    
+				<Input 
+					list='caretakerList' 
+					placeholder='Select caretaker...' 
+					size="mini" 
+					onChange={this.props.onChange}
+					ref={this.props.inputRef}
+				/>    
 				<datalist id='caretakerList'>					
 				  	{caretakerList}
 				</datalist>

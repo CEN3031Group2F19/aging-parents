@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import  './ButtonOval.css'
+import {Button} from 'semantic-ui-react'
 
 
 
@@ -11,7 +12,12 @@ class ButtonOval extends Component {
 			backgroundImage: `url(${this.props.image})`,
 		}
 		return (
-			<button type= {this.props.type || "button"} className="form-small-button" style={style} ></button>
+			<Button 
+				//type={this.props.type || "button"} 
+				//className="form-small-button" 
+				//style={style} 
+				onClick={this.props.onClick}
+				>Add</Button>
 		);
 	}
 }

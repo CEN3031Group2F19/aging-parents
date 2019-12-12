@@ -6,23 +6,19 @@ class Timecards extends React.Component {
 	render() {
 		const {TimecardData} = this.props;
 		const timecardEntries = TimecardData.map(entry => {
-			const full_name = entry.first_name + " " + entry.last_name;
 			return (
-				<tr key= {entry.id}>
-			        <td>{entry.date_in}</td>
-			        <td>{entry.time_in}</td>
-			        <td>{entry.time_out}</td>
-			        <td>{full_name}</td>
+				<tr key={entry.key}>
+			        <td>{new Date(entry.timeIn).toLocaleDateString()}</td>
+			        <td>{new Date(entry.timeIn).toLocaleTimeString()}</td>
+			        <td>{new Date(entry.timeOut).toLocaleTimeString()}</td>
+			        <td>{entry.userEmail}</td>
 				</tr>
 			)
 		});
 
 		const totalHours = TimecardData.reduce((sum, timecard)=> {
-			let [timeIn, period] = timecard.time_in.split(" ");
-				timeIn = (period === "PM")? (parseInt(timeIn) + 12) : parseInt(timeIn);
-			let [timeOut, period2] = timecard.time_out.split(" ");
-				timeOut = (period2 === "PM")? (parseInt(timeOut) + 12) : parseInt(timeOut);
-			let hours = (timeOut > timeIn)? (timeOut - timeIn) : ((24 + timeOut) - timeIn);
+			let milliseconds = new Date(timecard.timeOut).getTime() - new Date(timecard.timeIn).getTime();
+			let hours = milliseconds / (1000 * 60 * 60) // milliseconds/sec/minute
 			return(
 				sum + hours
 			)

@@ -2,7 +2,6 @@
 //Functionalities, such as interactivity will be implemented later
 import React, {Component} from 'react';
 import Timecards from '../../components/Timecards';
-import TimecardData from '../../components/TimecardData'; 
 import icon from '../../assets/ICON_TIMESHEET_CLOCK.png'
 import HeaderPage from '../../components/Header-Page/HeaderPage';
 import CaretakerList from '../../components/InputCaretakerSelect/InputCaretakerDatalist';
@@ -12,9 +11,9 @@ import BGImgClock from '../../assets/BG_WHITE_CLOCK_IMAGE.png'
 import InputLabeledDateChange from '../../components/InputLabeled/InputLabeledDateChange';
 import "../../components/Header-Page/HeaderPage.css";
 import "./Timesheet.css";
+const axios = require("axios");
 
-
-class Timesheet extends Component {
+class Timesheet extends React.Component {
 	constructor(props) {
 		super(props);	
 		const now = new Date();
@@ -25,15 +24,45 @@ class Timesheet extends Component {
 			inputDateType: "text",
 			displayDate: formatDisplayDate(defaultWeek),													
 			filteredCaretaker: "",							//default to all users
-			filteredCaretakerList:TimecardData,
-			dbTimecards: TimecardData,						//will be soon configured to pull from database
+			filteredCaretakerList: [],
+			dbTimecards: [],						//will be soon configured to pull from database
 			filteredTimecards: []			
 		}		
 		this.handleFocusDate = this.handleFocusDate.bind(this);
 		this.handleBlurDate = this.handleBlurDate.bind(this);
 		this.handleChangeDate = this.handleChangeDate.bind(this);
 		this.handleChangeFilteredCaretaker = this.handleChangeFilteredCaretaker.bind(this);
-	}	
+	
+		this.populateTimesheet();
+	}
+
+	populateTimesheet = async () => {
+		const serverUri =
+		process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
+  
+	  try {
+		const response = await axios.get(
+		  `${serverUri}/Timesheet/api/Shifts`
+		);
+  
+		var dbShifts = [];
+  
+		response.data.forEach(el => {
+			dbShifts.splice(0, 0, { 
+				key: el.key, 
+				userEmail: el.userEmail, 
+				timeIn: el.timeIn, 
+				timeOut: el.timeOut  
+			});
+		});
+  
+		this.setState({ dbTimecards: [...dbShifts], 
+			filteredTimecards: [...dbShifts],
+			filteredCaretakerList: [...dbShifts] });
+	  } catch (error) {
+		console.log(error);
+	  }
+	}
 
 	handleChangeFilteredCaretaker(e) {
 		let currValue = e.target.value;
@@ -48,11 +77,11 @@ class Timesheet extends Component {
 	filterTimecards(filteredCaretaker, inputDate) {
 		return(this.state.dbTimecards.filter(timecard =>{
 			let caretaker = !(filteredCaretaker) ||
-				(timecard.first_name +" " + timecard.last_name).toLowerCase().indexOf(filteredCaretaker.toLowerCase()) >= 0;				
+				(timecard.userEmail).toLowerCase().indexOf(filteredCaretaker.toLowerCase()) >= 0;				
 			let weekLastDay = (inputDate)? setBeginingOfWeek(inputDate) :
 				 new Date(this.state.week.getFullYear(), this.state.week.getMonth(), this.state.week.getDate());
 			weekLastDay.setDate(weekLastDay.getDate() + 6);
-			let timecardDateValues= timecard.date_in.split('/');
+			let timecardDateValues= timecard.timeIn.split('/');
 			let timecardDateIn = new Date(parseInt("20" + timecardDateValues.pop()), parseInt(timecardDateValues.shift()) - 1, parseInt(timecardDateValues.shift()));
 			return( 
 				caretaker &&  
@@ -106,14 +135,20 @@ class Timesheet extends Component {
 				<div className="Header-page">
 					<HeaderPage	icon={icon} title='Timesheet'/>			
 				</div>
-				<InputLabeledDateChange divClassName="flex-container-horizontal flex-container-justify-center background-AppOrange section-padding text-white-bold" 
-					labelClassName="labelpadded" labelValue="Week of:"
-					type={this.state.inputDateType} min="2017-01-01" step="7" 
+				<InputLabeledDateChange 
+					divClassName="flex-container-horizontal flex-container-justify-center background-AppOrange section-padding text-white-bold" 
+					labelClassName="labelpadded" 
+					labelValue="Week of:"
+					type={this.state.inputDateType} 
+					min="2017-01-01" 
+					step="7" 
 					value={(this.state.inputDateType === "date")? this.state.requestedDate : this.state.displayDate} 
-					max={(new Date()).toStringHTML()} onFocus={this.handleFocusDate} onBlur={this.handleBlurDate} onChange={this.handleChangeDate}/>
+					max={(new Date()).toStringHTML()} 
+					onFocus={this.handleFocusDate} onBlur={this.handleBlurDate} 
+					onChange={this.handleChangeDate}/>
 				<div className="flex-container-horizontal flex-container-justify-center background-AppDarkGrey section-padding text-white-bold">
 					<label className="labelpadded">Caretaker: </label>		
-					<CaretakerList onChange={this.handleChangeFilteredCaretaker}/>
+					<CaretakerList caretakers={this.state.dbTimecards} onChange={this.handleChangeFilteredCaretaker}/>
 				</div>				
 				<div>				
 					<Timecards TimecardData = {this.state.filteredCaretakerList}/>
