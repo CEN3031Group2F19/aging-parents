@@ -8,16 +8,10 @@ class InputLabeled extends Component {
 		return (
 			<div className="Row"> 
 		  		<div className="Cell">
-		  			<label htmlFor={id}>
-						{this.props.name}
-					</label>
+		  			<label htmlFor={id}>{this.props.name}</label>
 		  		</div>
 		    	<div className="Cell">
-					<input 
-						id={id} 
-						name={this.props.name} 
-						className="cell-whole-width"
-					/>
+		    		<input type={this.props.type} id={id} name={this.props.name} className="cell-whole-width"/>
 		    	</div>
 			</div>	
 		);

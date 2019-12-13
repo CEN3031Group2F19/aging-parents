@@ -24,6 +24,8 @@ class NewAppointment extends React.Component {
     };
 
     AddButton_Click = async () => {
+
+        console.log(this.state)
         try {
             const serverUri =
             process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
@@ -44,6 +46,8 @@ class NewAppointment extends React.Component {
                 endTime: startTime,
                 notes: this.state.notes
             }
+
+            console.log(body)
 
             await axios.post(`${serverUri}/Calendar/api/Add`, body);
 
