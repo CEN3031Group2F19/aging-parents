@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import './Medications.css';
-import { Confirm, Select, Table, TableBody, Label, Button, TextArea, Input } from 'semantic-ui-react';
+import { Select, Table, TableBody, Label, Button, TextArea, Input } from 'semantic-ui-react';
 const axios = require("axios");
 
 const frequencyOptions = [
@@ -35,8 +35,7 @@ class EditMedication extends React.Component {
             frequency: '',
             timeOfDay: '',
             pharmacist: '',
-            notes: '',
-            open: false
+            notes: ''
         };
 
         this.getMedication(props.medicationId);
@@ -85,23 +84,24 @@ class EditMedication extends React.Component {
         }
     }
 
-    SaveBtn_Click = () => {
-        this.postRequest('/Medications/api/Update',
-        {
-            key: this.state.key,
-            name: this.state.name,
-            frequency: this.state.frequency,
-            timeOfDay: this.state.timeOfDay,
-            pharmacist: this.state.pharmacist,
-            notes: this.state.notes
-        });
-    }
+    ButtonClick = (e, sender) => {
+        if (e.target.innerText === "Save")  {
+            this.postRequest('/Medications/api/Update',
+            {
+                key: this.state.key,
+                name: this.state.name,
+                frequency: this.state.frequency,
+                timeOfDay: this.state.timeOfDay,
+                pharmacist: this.state.pharmacist,
+                notes: this.state.notes
+            });
+        }
+        else if (e.target.innerText === "Delete") {
+            this.postRequest('/Medications/api/Delete',
+            { key: this.state.key });
 
-    DeleteBtn_Click = () => {
-        this.postRequest('/Medications/api/Delete',
-        { key: this.state.key });
-        this.getMedication();
-        this.setState({open: false});
+            this.getMedication();
+        } 
     }
 
     render() {
@@ -151,21 +151,15 @@ class EditMedication extends React.Component {
                     <tr>
                         <Button
                                 style={{width: '49%', display: 'inline-block'}}
-                                onClick={this.SaveBtn_Click}
+                                onClick={this.ButtonClick}
                             >Save</Button>
                         <Button
                                 style={{width: '49%', display: 'inline-block', float: 'right'}}
-                                onClick={() => this.setState({open: true})}
+                                onClick={this.ButtonClick}
                             >Delete</Button>
                     </tr>
                 </TableBody>
-            </Table>
-            <Confirm 
-                open={this.state.open}
-                onCancel={() => {this.setState({open: false})}}
-                onConfirm={() => this.DeleteBtn_Click()}
-            />
-            </> 
+            </Table></> 
             : 
             <Redirect to="/Medications" />
         );

@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Button, Header, Grid } from "semantic-ui-react";
-import daily_tasks from "../../../assets/ICONS/ICON_DAILY_TASKS_SUN.png";
-import HeaderPage from "../../../components/Header-Page/HeaderPage";
-//import bloodPressure from "../../assets/BACKGROUNDS/BG_GREEN_BLOODPRESSURE_IMAGE.png";
+import daily_tasks from "../../assets/ICONS/ICON_DAILY_TASKS_SUN.png";
+import HeaderPage from "../../components/Header-Page/HeaderPage";
+
+import bloodPressure from "../../assets/BACKGROUNDS/BG_GREEN_BLOODPRESSURE_IMAGE.png";
 
 class DailyTaskList extends Component {
   componentDidUpdate() {
