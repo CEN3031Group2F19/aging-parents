@@ -298,8 +298,7 @@ class Timesheet extends Component {
 						</span>	
 						<span style={{margin: "10px"}} className="flex-self-start">	
 							<CSVLink data={this.state.csvData} headers={this.state.csvHeaders} 
-							filename={"Timesheet_Week" + this.state.week.toStringHTML() +
-							 ((this.state.filteredCaretaker)? "_" + this.state.filteredCaretaker[0] + this.state.filteredCaretaker.split(" ")[1][0]: "") + ".csv"}>							
+								filename={"Timesheet_Week" + this.state.week.toStringHTML() + ".csv"}>						
 								<button className="form-small-button" style={{backgroundImage: `url(${ButtonExport})`}} onClick={this.onDownload}></button>
 							</CSVLink>							
 						</span>
