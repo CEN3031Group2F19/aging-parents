@@ -8,23 +8,17 @@
   font-weight: bold;
 }
 
-
-/*input[type="submit"] {
-  background-image: url("../../assets/BUTTON_ADD.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  font-weight: bold;
-  display: inline-block;
-  text-align: center;
-  cursor: pointer;
-  height: 50px; 
-  width: 120px;
-  border-radius: 1em;
+small {
+  color: red; 
+  text-align: right;
 }
-*/
+
+.successMsg {
+  color: green; 
+  text-align: center;
+}
 
 input[type="submit"].form-small-button , button.form-small-button {
-  background: url("../../assets/BUTTON_ADD.png");
   background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
@@ -36,6 +30,23 @@ input[type="submit"].form-small-button , button.form-small-button {
   border-radius: 5em;
   border:none;
 }
+
+.triangle-up {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 10px solid #606161;
+}
+
+.triangle-down {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 10px solid #606161;
+}
+
 
 .box {
 	display: flex;
@@ -148,6 +159,8 @@ tfoot td {
 
 .stripedTable {
   border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
 }
 .stripedTable td, th {
   border: 2px solid #ffffff; 
@@ -165,8 +178,13 @@ tfoot td {
   border-right: 0;
 }
 
+.stripedTable tbody > tr:hover {
+  background-color: #ffffff;  
+  border: 3px solid #a1bb3e;
+}
+
 label.labelpadded {
-    display: block; /* add this */
+    display: block; 
     padding-right: 20px;
     text-align: left;
 }
@@ -174,6 +192,9 @@ label.labelpadded {
 .Table
     {
         display: table;
+        table-layout: fixed;
+        width: 40%;
+        min-width: 350px;
     }
 
 .Title
@@ -205,10 +226,6 @@ label.labelpadded {
 .Cell
 {
     display: table-cell;
-    /*border: solid;*/
-    /*border-width: thin;*/
-/*    padding-left: 5px;
-    padding-right: 5px;*/
     padding: 5px;
     width: 100%;   
 }
@@ -217,4 +234,30 @@ label.labelpadded {
 {
     display: table-footer-group;
 
+}
+
+.wholeRow {  
+  width: 100%;
+}
+
+input[type="submit"].form-verysmall-button, button.form-verysmall-button {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover; 
+  height: 20px;
+  width: 50px;
+  text-indent: -9999px;
+  color: #A9A9A9;
+  display: inline-block;
+  cursor: pointer;  
+  border-radius: 5em;
+  border:none;
+  margin: 1px;
+}
+
+p.alert-msg {
+  text-align: center;
+  width: 100%;
+  color: red;
+  font-weight: bold;
 }

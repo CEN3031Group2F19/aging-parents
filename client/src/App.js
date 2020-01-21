@@ -15,6 +15,7 @@ import CalendarView from "./views/CalendarView/CalendarView";
 import CalendarDateView from "./views/CalendarView/CalendarDateView";
 import Timesheet from "./views/Timesheet/Timesheet";
 import TimesheetAdd from "./views/TimesheetAdd/TimesheetAdd";
+import TimesheetEdit from "./views/TimesheetAdd/TimesheetEdit";
 
 import NotFound from "./views/NotFound";
 import SignUp from "./views/SignUp/SignUp";
@@ -108,6 +109,17 @@ class App extends React.Component {
             render={props =>
               this.isUserSignedIn() ? (
                 <TimesheetAdd {...props} />
+              ) : (
+                <Redirect to="/Home" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/Timesheet/TimesheetEdit/:id"
+            render={props =>
+              this.isUserSignedIn() ? (
+                <TimesheetEdit {...props} id={props.match.params.id} />
               ) : (
                 <Redirect to="/Home" />
               )

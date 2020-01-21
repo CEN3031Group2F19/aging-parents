@@ -62,7 +62,6 @@ label.labelpadded {
 }
 
 input[type="submit"].form-small-button , button.form-small-button {
-  background: url("../../assets/BUTTON_ADD.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
