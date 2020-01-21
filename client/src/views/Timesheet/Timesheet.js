@@ -5,7 +5,6 @@
 //User able to sort by any column. First click on a column
 //sorts it in ascending order, 2nd click on the same column in descending order and 3rd click back to unsorted
 //Click on Add button at the bottom to add new timecard
-//Click on Export button to export current timesheet (filtered/unfiltered and/or sorted/unsorted) to csv file format
 
 import React, {Component} from 'react';
 import Timecards from '../../components/Timecards';
@@ -13,15 +12,13 @@ import icon from '../../assets/ICON_TIMESHEET_CLOCK.png'
 import HeaderPage from '../../components/Header-Page/HeaderPage';
 import CaretakerList from '../../components/InputCaretakerSelect/InputCaretakerDatalist';
 import ButtonAdd from '../../assets/BUTTON_ADD.png';
-import ButtonExport from '../../assets/BUTTON_EXPORT.png';
 import BGImgClock from '../../assets/BG_WHITE_CLOCK_IMAGE.png';
 import InputLabeledDateChange from '../../components/InputLabeled/InputLabeledDateChange';
 import "../../components/Header-Page/HeaderPage.css";
 import "./Timesheet.css";
 import axios from 'axios';
-import {setBeginingOfWeek, formatDisplayDate, SORTING, compareAscend, prependPositiveZero} from '../../components/helperFunctions';
-import {CSVLink} from "react-csv";
-
+import {setBeginingOfWeek, formatDisplayDate, SORTING, compareAscend} from '../../components/helperFunctions';
+import DownloadTimesheetCSV from "../../components/DownloadTimesheetCSV/DownloadTimesheetCSV"
 
 class Timesheet extends Component {
 	constructor(props) {
@@ -41,18 +38,7 @@ class Timesheet extends Component {
 			caretakers: [],
 			loading: false,
 			sortedCol: "",
-			sortType: SORTING["none"],
-			csvHeaders:[
-				{label: "Date In", key: "dateIn"},
-				{label: "Time In", key: "timeIn"},
-				{label: "Date Out", key: "dateOut"},				
-				{label: "Time Out", key: "timeOut"},
-				{label: "Caretaker Full Name", key: "caretaker"},
-				{label: "Caretaker First Name", key: "firstName"},
-				{label: "Caretaker Last Name", key: "lastName"},
-				{label: "Hours", key: "hours"}
-			],
-			csvData: []	
+			sortType: SORTING["none"]	
 		}		
 		this.handleFocusDate = this.handleFocusDate.bind(this);
 		this.handleBlurDate = this.handleBlurDate.bind(this);
@@ -60,7 +46,6 @@ class Timesheet extends Component {
 		this.handleChangeFilteredCaretaker = this.handleChangeFilteredCaretaker.bind(this);
 		this.handleTimecardsChange = this.handleTimecardsChange.bind(this);
 		this.handleSorting = this.handleSorting.bind(this);
-		this.onDownload = this.onDownload.bind(this);
 	}
 
 	//Queries database once component mount
@@ -240,34 +225,6 @@ class Timesheet extends Component {
 		})
 	}
 
-	//Prepare filtered timecard list for downclick once Export button clicked
-	onDownload() {
-		this.setState({			
-			csvData: this.state.filteredCaretakerList.map(data => {
-				const caretaker = data.caretaker.firstName + " " + data.caretaker.lastName;
-				const date_in = new Date(data.timeIn);
-				const date_out = new Date(data.timeOut);
-				const dateIn = date_in.getFullYear() + "/" + prependPositiveZero(date_in.getMonth() + 1) + "/" + prependPositiveZero(date_in.getDate());
-				const timeIn = prependPositiveZero(date_in.getHours()) + ":" + prependPositiveZero(date_in.getMinutes());
-				const dateOut= date_out.getFullYear() + "/" + prependPositiveZero(date_out.getMonth() + 1) + "/" + prependPositiveZero(date_out.getDate());
-				const timeOut = prependPositiveZero(date_out.getHours()) + ":" + prependPositiveZero(date_out.getMinutes());
-				const hours = (Math.floor((date_out - date_in) / (60 * 1000)) / 60).toFixed(2);
-
-				return({
-					dateIn: dateIn,
-					timeIn: timeIn,
-					dateOut: dateOut,
-					timeOut: timeOut,
-					caretaker: caretaker,
-					firstName: data.caretaker.firstName,
-					lastName: data.caretaker.lastName,
-					hours: hours
-				});
-			})
-		});
-	}
-
-
 	render(){
 		return(	
 			<div className="flex-container-vertical">				
@@ -297,10 +254,7 @@ class Timesheet extends Component {
 							</a>
 						</span>	
 						<span style={{margin: "10px"}} className="flex-self-start">	
-							<CSVLink data={this.state.csvData} headers={this.state.csvHeaders} 
-								filename={"Timesheet_Week" + this.state.week.toStringHTML() + ".csv"}>						
-								<button className="form-small-button" style={{backgroundImage: `url(${ButtonExport})`}} onClick={this.onDownload}></button>
-							</CSVLink>							
+							<DownloadTimesheetCSV list={this.state.filteredCaretakerList} week={this.state.week.toStringHTML()}/>
 						</span>
 					</div>	
 				</div>
@@ -309,4 +263,4 @@ class Timesheet extends Component {
 	}
 }
 
-export default Timesheet;
+export default Timesheet;							
