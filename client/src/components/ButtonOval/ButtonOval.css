@@ -5,6 +5,21 @@ input[type="submit"].form-small-button, button.form-small-button {
 	background-size: cover;	
 	height: 40px;
 	text-indent: -9999px;
+  color: #A9A9A9;
+  display: inline-block;
+  cursor: pointer;  
+  border-radius: 5em;
+  border:none;
+  margin: 5px;
+}
+
+input[type="submit"].form-verysmall-button, button.form-verysmall-button {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover; 
+  height: 20px;
+  text-indent: -9999px;
+  color: #A9A9A9;
   display: inline-block;
   cursor: pointer;  
   border-radius: 5em;

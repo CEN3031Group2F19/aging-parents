@@ -1,122 +1,292 @@
-//This is the whole Timesheet page.
-//Functionalities, such as interactivity will be implemented later
+//This is the Timesheet view
+// It queries all timecards from the database for the specified week,
+//User able to filter by week annd caretaker. Caretaker field is a datalist not a selection list, thus user needs
+//to clear field in order to see caretaker list
+//User able to sort by any column. First click on a column
+//sorts it in ascending order, 2nd click on the same column in descending order and 3rd click back to unsorted
+//Click on Add button at the bottom to add new timecard
+//Click on Export button to export current timesheet (filtered/unfiltered and/or sorted/unsorted) to csv file format
+
 import React, {Component} from 'react';
 import Timecards from '../../components/Timecards';
-import TimecardData from '../../components/TimecardData'; 
 import icon from '../../assets/ICON_TIMESHEET_CLOCK.png'
 import HeaderPage from '../../components/Header-Page/HeaderPage';
 import CaretakerList from '../../components/InputCaretakerSelect/InputCaretakerDatalist';
-import ButtonAdd from '../../assets/BUTTON_ADD.png'
-import ButtonExport from '../../assets/BUTTON_EXPORT.png'
-import BGImgClock from '../../assets/BG_WHITE_CLOCK_IMAGE.png'
+import ButtonAdd from '../../assets/BUTTON_ADD.png';
+import ButtonExport from '../../assets/BUTTON_EXPORT.png';
+import BGImgClock from '../../assets/BG_WHITE_CLOCK_IMAGE.png';
 import InputLabeledDateChange from '../../components/InputLabeled/InputLabeledDateChange';
 import "../../components/Header-Page/HeaderPage.css";
 import "./Timesheet.css";
+import axios from 'axios';
+import {setBeginingOfWeek, formatDisplayDate, SORTING, compareAscend, prependPositiveZero} from '../../components/helperFunctions';
+import {CSVLink} from "react-csv";
 
 
 class Timesheet extends Component {
 	constructor(props) {
 		super(props);	
 		const now = new Date();
-		const defaultWeek = new Date(now - (now.getDay() * 24 * 60 * 60 * 1000));	//Set to begining of week
+		const defaultWeek = new Date(now - (now.getDay() * 24 * 60 * 60 * 1000));
 		this.state = {
+			minDate: "2017-01-01",
+			maxDate: new Date().toStringHTML(),
 			week:defaultWeek,
 			requestedDate: defaultWeek.toStringHTML(),
 			inputDateType: "text",
 			displayDate: formatDisplayDate(defaultWeek),													
-			filteredCaretaker: "",							//default to all users
-			filteredCaretakerList:TimecardData,
-			dbTimecards: TimecardData,						//will be soon configured to pull from database
-			filteredTimecards: []			
+			filteredCaretaker: "",							
+			filteredCaretakerList:[],
+			dbTimecards: [],					
+			caretakers: [],
+			loading: false,
+			sortedCol: "",
+			sortType: SORTING["none"],
+			csvHeaders:[
+				{label: "Date In", key: "dateIn"},
+				{label: "Time In", key: "timeIn"},
+				{label: "Date Out", key: "dateOut"},				
+				{label: "Time Out", key: "timeOut"},
+				{label: "Caretaker Full Name", key: "caretaker"},
+				{label: "Caretaker First Name", key: "firstName"},
+				{label: "Caretaker Last Name", key: "lastName"},
+				{label: "Hours", key: "hours"}
+			],
+			csvData: []	
 		}		
 		this.handleFocusDate = this.handleFocusDate.bind(this);
 		this.handleBlurDate = this.handleBlurDate.bind(this);
 		this.handleChangeDate = this.handleChangeDate.bind(this);
 		this.handleChangeFilteredCaretaker = this.handleChangeFilteredCaretaker.bind(this);
-	}	
+		this.handleTimecardsChange = this.handleTimecardsChange.bind(this);
+		this.handleSorting = this.handleSorting.bind(this);
+		this.onDownload = this.onDownload.bind(this);
+	}
 
+	//Queries database once component mount
+	componentDidMount() {		
+		this.dbAllWklyTimecards(this.state.week.toStringHTML())
+			.then(data => this.setState(()=>{return{ filteredCaretakerList: data }}))
+			.catch(error => console.log(error));
+	}
+
+	//Sends request to backend to get weekly timecards
+	async dbAllWklyTimecards(week) {
+		try{
+			this.setState({loading: true});
+			const serverUri =
+			process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
+			const response= await axios.get(`${serverUri}/Timesheet/api/TimecardsWkly`, {params : {
+				weekOf: week
+			}});
+
+			this.setState(()=>{
+				return {				
+					dbTimecards: response.data,
+					caretakers: response.data.reduce((arr,entry) => {
+						if(arr.length === 0 || !arr.find(arrElement => arrElement._id === entry.caretaker._id)) {
+							arr.push(entry.caretaker);
+						}
+						return arr;
+					}, []),
+					loading: false
+				}			
+			});
+			return response.data;
+		}catch (error) {
+			console.log("It fails: ", error);
+		}
+	}
+
+	//handles filter for caretaker field
 	handleChangeFilteredCaretaker(e) {
 		let currValue = e.target.value;
 		this.setState(() => {
 			return {
-				filteredCaretaker: currValue,
-				filteredCaretakerList: this.filterTimecards(currValue, null)
+				filteredCaretaker: currValue				
 			};
 		});
+		this.filterTimecards(currValue, this.state.dbTimecards);
 	}
 
-	filterTimecards(filteredCaretaker, inputDate) {
-		return(this.state.dbTimecards.filter(timecard =>{
-			let caretaker = !(filteredCaretaker) ||
-				(timecard.first_name +" " + timecard.last_name).toLowerCase().indexOf(filteredCaretaker.toLowerCase()) >= 0;				
-			let weekLastDay = (inputDate)? setBeginingOfWeek(inputDate) :
-				 new Date(this.state.week.getFullYear(), this.state.week.getMonth(), this.state.week.getDate());
-			weekLastDay.setDate(weekLastDay.getDate() + 6);
-			let timecardDateValues= timecard.date_in.split('/');
-			let timecardDateIn = new Date(parseInt("20" + timecardDateValues.pop()), parseInt(timecardDateValues.shift()) - 1, parseInt(timecardDateValues.shift()));
-			return( 
-				caretaker &&  
-				timecardDateIn >= this.state.week && 
-				timecardDateIn <= weekLastDay				 
-			)})
-		)
+	//filters timesheet based on caretaker and cancel sorting
+	filterTimecards(caretaker, timecards) {		
+		this.setState(()=>{
+			return {
+				filteredCaretakerList: timecards.filter(timecard => {
+				return(
+					!(caretaker) ||
+					(timecard.caretaker.firstName +" " + timecard.caretaker.lastName).toLowerCase().indexOf(caretaker.toLowerCase()) >= 0
+				)
+			}),
+				sortedCol: "",
+				sortType: SORTING["none"]
+			}
+		});				
 	}
 
-	//Change input field to a date field on focus
+
+	//Changes "Week of" input text field to a date field on focus
 	handleFocusDate(e) {
-		let currValue = e.target.value;
 		this.setState({
 			inputDateType: "date",
 		})
 	}
 
-	//Only accept date change if value if not null and <= today
+	//Allows user to change date
+	//Call for datase query only if date value is not null 
+	//and is within range of min date and max date, and if currValue differs from previous value
 	handleChangeDate(e) {
-		let currValue = e.target.value;
-		if(currValue && currValue <= (new Date()).toStringHTML()) {
-			this.setState({
-				week: setBeginingOfWeek(currValue),			
-				inputDateType: "date",
+		const currValue = e.target.value;
+		const beginWeek = setBeginingOfWeek(currValue)
+		this.setState(()=>{
+			return {								
 				requestedDate: currValue,
-				displayDate: formatDisplayDate(setBeginingOfWeek(currValue)),
-				filteredCaretakerList: this.filterTimecards(this.state.filteredCaretaker, currValue)
-			})
-		}	
+				displayDate: formatDisplayDate(setBeginingOfWeek(currValue))
+			}
+		});
+
+		if(currValue && currValue <= this.state.maxDate && currValue >= this.state.minDate
+			&& (this.state.week < beginWeek || this.state.week > beginWeek)){
+			this.setState(()=>{
+				return {
+					week: beginWeek
+				}
+			});
+			this.dbAllWklyTimecards(beginWeek.toStringHTML())
+				.then(data => {this.filterTimecards(this.state.filteredCaretaker, data)})
+				.catch(error => {console.log(error)});
+		}		
 	}
 
-	//Change input field back to date field on blur
+	//Changes input date field back to input text field on blur
+	//if input date doesn't meet criteria above, it is switched back to previous value
 	handleBlurDate(e) {
-		let currValue = e.target.value;
-		if(currValue && currValue <= (new Date()).toStringHTML()) {
-			this.setState({
-				week: setBeginingOfWeek(currValue),
-				requestedDate: currValue,
+		this.setState(()=>{
+			return {
+				requestedDate: this.state.week.toStringHTML(),
 				inputDateType: "text",
-				displayDate: formatDisplayDate(setBeginingOfWeek(currValue)),
-				filteredCaretakerList: this.filterTimecards(this.state.filteredCaretaker, currValue)
-			})
+				displayDate: formatDisplayDate(this.state.week)
+			}
+		})
+		
+	}
+
+	//Queries database on change in Timecard component
+	handleTimecardsChange() {
+		this.dbAllWklyTimecards(this.state.week.toStringHTML())
+				.then(data => {this.filterTimecards(this.state.filteredCaretaker, data)})
+				.catch(error => {console.log(error)});
+	}
+
+	//Unsorts if the clicked column was sorted in descending order
+	//Else Sorts in descending order, if the clicked column was sorted in ascending order
+	//Else Sorts in ascending order
+	handleSorting(e) {
+		e.preventDefault();
+		const element = (e.target.nodeName === "I")? e.target.parentNode : e.target;
+		const val = element.getAttribute("name");	
+		if(this.state.sortedCol === val && this.state.sortType < 0) {
+			this.setState(()=>{
+				return{
+					sortedCol: "",
+					sortType: SORTING["none"]
+				}
+			});
+			this.filterTimecards(this.state.filteredCaretaker, this.state.dbTimecards);
+		}else if(this.state.sortedCol === val && this.state.sortType > 0){
+			this.sortData(val, SORTING["descend"]);		
+			this.setState(()=>{return{sortType: SORTING["descend"]}});
+		}else {
+			this.sortData(val, SORTING["ascend"]);
+			this.setState(()=>{
+				return{
+					sortedCol: val,
+					sortType: SORTING["ascend"]
+				}
+			});
 		}
 	}
 
+	//The actual function: Sorts data in ascending or descending order
+	sortData(val, sortType) {
+		this.setState(()=>{
+			return{
+				filteredCaretakerList: this.state.filteredCaretakerList.concat().sort(function(a, b) {
+					let valueA,	valueB;
+					switch (val) {
+						case "date":
+							valueA = new Date(a.timeIn).toStringHTML();
+							valueB = new Date(b.timeIn).toStringHTML();
+							break;
+						case "timein":
+							valueA = new Date(a.timeIn).toStringTimeHTML();
+							valueB = new Date(b.timeIn).toStringTimeHTML();
+							break;
+						case "timeout":
+							valueA = new Date(a.timeOut).toStringTimeHTML();
+							valueB = new Date(b.timeOut).toStringTimeHTML();
+							break;						
+						case "caretaker":
+							valueA = a.caretaker.firstName + " " + a.caretaker.lastName;
+							valueB = b.caretaker.firstName + " " + b.caretaker.lastName;
+							break;						
+						default:
+							return 0;
+					}
+					return (sortType === SORTING["ascend"])? compareAscend(valueA, valueB) : compareAscend(valueB, valueA);
+				})
+			}
+		})
+	}
+
+	//Prepare filtered timecard list for downclick once Export button clicked
+	onDownload() {
+		this.setState({			
+			csvData: this.state.filteredCaretakerList.map(data => {
+				const caretaker = data.caretaker.firstName + " " + data.caretaker.lastName;
+				const date_in = new Date(data.timeIn);
+				const date_out = new Date(data.timeOut);
+				const dateIn = date_in.getFullYear() + "/" + prependPositiveZero(date_in.getMonth() + 1) + "/" + prependPositiveZero(date_in.getDate());
+				const timeIn = prependPositiveZero(date_in.getHours()) + ":" + prependPositiveZero(date_in.getMinutes());
+				const dateOut= date_out.getFullYear() + "/" + prependPositiveZero(date_out.getMonth() + 1) + "/" + prependPositiveZero(date_out.getDate());
+				const timeOut = prependPositiveZero(date_out.getHours()) + ":" + prependPositiveZero(date_out.getMinutes());
+				const hours = (Math.floor((date_out - date_in) / (60 * 1000)) / 60).toFixed(2);
+
+				return({
+					dateIn: dateIn,
+					timeIn: timeIn,
+					dateOut: dateOut,
+					timeOut: timeOut,
+					caretaker: caretaker,
+					firstName: data.caretaker.firstName,
+					lastName: data.caretaker.lastName,
+					hours: hours
+				});
+			})
+		});
+	}
 
 
 	render(){
-		return(
+		return(	
 			<div className="flex-container-vertical">				
 				<div className="Header-page">
 					<HeaderPage	icon={icon} title='Timesheet'/>			
 				</div>
 				<InputLabeledDateChange divClassName="flex-container-horizontal flex-container-justify-center background-AppOrange section-padding text-white-bold" 
 					labelClassName="labelpadded" labelValue="Week of:"
-					type={this.state.inputDateType} min="2017-01-01" step="7" 
+					type={this.state.inputDateType} min={this.state.minDate} step="7" 
 					value={(this.state.inputDateType === "date")? this.state.requestedDate : this.state.displayDate} 
-					max={(new Date()).toStringHTML()} onFocus={this.handleFocusDate} onBlur={this.handleBlurDate} onChange={this.handleChangeDate}/>
+					max={this.state.maxDate} onFocus={this.handleFocusDate} onBlur={this.handleBlurDate} onChange={this.handleChangeDate}/>
 				<div className="flex-container-horizontal flex-container-justify-center background-AppDarkGrey section-padding text-white-bold">
 					<label className="labelpadded">Caretaker: </label>		
-					<CaretakerList onChange={this.handleChangeFilteredCaretaker}/>
+					<CaretakerList caretakers={this.state.caretakers} onChange={this.handleChangeFilteredCaretaker} onClick={this.handleChangeFilteredCaretaker}/>
 				</div>				
 				<div>				
-					<Timecards TimecardData = {this.state.filteredCaretakerList}/>
+					<Timecards TimecardData={this.state.filteredCaretakerList} loading={this.state.loading} 
+						onChange={this.handleTimecardsChange} sort={this.handleSorting}
+						sortedCol={this.state.sortedCol} sortType={this.state.sortType}/>
 				</div>
 				<div>			
 					<div className="flex-container-horizontal section-whole-page flex-container-align-start background-AppWhite" 
@@ -127,7 +297,11 @@ class Timesheet extends Component {
 							</a>
 						</span>	
 						<span style={{margin: "10px"}} className="flex-self-start">	
-							<button className="form-small-button" style={{backgroundImage: `url(${ButtonExport})`}}></button>
+							<CSVLink data={this.state.csvData} headers={this.state.csvHeaders} 
+							filename={"Timesheet_Week" + this.state.week.toStringHTML() +
+							 ((this.state.filteredCaretaker)? "_" + this.state.filteredCaretaker[0] + this.state.filteredCaretaker.split(" ")[1][0]: "") + ".csv"}>							
+								<button className="form-small-button" style={{backgroundImage: `url(${ButtonExport})`}} onClick={this.onDownload}></button>
+							</CSVLink>							
 						</span>
 					</div>	
 				</div>
@@ -135,64 +309,5 @@ class Timesheet extends Component {
 		);
 	}
 }
-
-
-Date.prototype.toStringHTML = function () {	
-	return (this.toISOString().split('T')[0]);	
-}
-
-function formatDisplayDate(date) {
-	// console.log(typeof date);
-	let day = "";
-	switch (date.getDay()) {				
-		case 0:
-		    day = "Sunday";
-		    break;
-		case 1:
-			day = "Monday";
-			break;
-		case 2:
-			 day = "Tuesday";
-			break;
-		case 3:
-			day = "Wednesday";
-			break;
-		case 4:
-			day = "Thursday";
-			break;
-		case 5:
-			day = "Friday";
-			break;
-		case 6:
-		
-			day = "Saturday";
-	}
-	return(day + ", " + ((date.getMonth() + 1 < 10)? "0" : "") + (date.getMonth()+1) + 
-		"\/"+ ((date.getDate() < 10)? "0" : "") +date.getDate() + 
-		"\/" + date.getFullYear()
-	);
-}
-
-function formatDisplayDateToHTMLDate(dispDate) {
-	// console.log(typeof dispDate);
-	let dateValues= dispDate.split(' ')[1].split('/');
-	return(dateValues.pop() + "-" + dateValues.join('-') );
-}
-
-function setBeginingOfWeek(date) {
-
-	let pickedDate = (typeof date === 'string') ? 
-		new Date(parseInt(date.substring(0,4)), 
-		parseInt(date.substring(5,7)) - 1, 
-		parseInt(date.substring(8,10))) :
-		date;
-	
-	if(pickedDate.getDay() == 0) {
-		return (pickedDate);
-	} 
-	pickedDate.setDate(pickedDate.getDate() - pickedDate.getDay());
-	return(pickedDate);
-}
-
 
 export default Timesheet;

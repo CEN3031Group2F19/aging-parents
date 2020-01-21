@@ -1,3 +1,8 @@
+//InputLabeledDateChange component
+//Takes as props: divClassName, labelClassName, labelValue, type, 
+//inputClassName, min, step, max, defaultValue, value, onChange, onBlur and onFocus
+//Allows great flexibility to change both input and label
+
 import React from 'react';
 
 class InputLabeledDateChange extends React.Component {

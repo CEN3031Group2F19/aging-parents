@@ -18,6 +18,13 @@
     font-size: larger;
 }
 
+.flex-container-horizontal-wrap {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
 .Heading
 {
     display: table-row;
@@ -51,4 +58,8 @@
 
 .cell-whole-width {
   width: 100%;
+}
+
+input[type= "text"]:read-only {
+  background-color: #d3d3d3;
 }
